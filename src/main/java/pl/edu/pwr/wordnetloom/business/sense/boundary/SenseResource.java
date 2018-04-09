@@ -1,0 +1,107 @@
+package pl.edu.pwr.wordnetloom.business.sense.boundary;
+
+import pl.edu.pwr.wordnetloom.business.EntityBuilder;
+import pl.edu.pwr.wordnetloom.business.ResourceUriBuilder;
+import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilter;
+import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilterExtractorFromUrl;
+import pl.edu.pwr.wordnetloom.business.sense.enity.SenseAttributes;
+import pl.edu.pwr.wordnetloom.business.sense.enity.SenseEmotions;
+
+import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.stream.JsonCollectors;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.Locale;
+
+
+@Path("senses")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class SenseResource {
+
+    @Inject
+    SenseService service;
+
+    @Inject
+    EntityBuilder entityBuilder;
+
+    @Inject
+    ResourceUriBuilder resourceUriBuilder;
+
+    @Context
+    UriInfo uriInfo;
+
+    @GET
+    public JsonObject getSenses(@HeaderParam("Accept-Language") Locale locale) {
+        final SearchFilter filter = new SearchFilterExtractorFromUrl(uriInfo).getFilter();
+        final long count = service.countWithFilter(filter);
+        return entityBuilder.buildPaginatedSense(service.findAllPaginated(filter), count, uriInfo, locale);
+    }
+
+    @GET
+    @Path("{id:\\d+}")
+    public JsonObject getSense(@HeaderParam("Accept-Language") Locale locale,
+                            @PathParam("id") final Long id) {
+        final SenseAttributes attributes = service.findSenseAttributes(id).orElse(null);
+        return service.findById(id)
+                .map(s -> entityBuilder.buildSense(s, attributes, resourceUriBuilder.forSense(s, uriInfo), uriInfo, locale))
+                .orElse(Json.createObjectBuilder().build());
+    }
+
+    @GET
+    @Path("{senseId:\\d+}/examples")
+    public JsonObject getSenseExamples(@HeaderParam("Accept-Language") Locale locale,
+                               @PathParam("senseId") final Long senseId) {
+
+       return Json.createObjectBuilder().build();
+    }
+
+    @GET
+    @Path("{senseId:\\d+}/examples/{exampleId:\\d+}")
+    public JsonObject getSenseExample(@HeaderParam("Accept-Language") Locale locale,
+                                      @PathParam("senseId") final Long senseId,  @PathParam("exampleId") final Long exampleId) {
+        return Json.createObjectBuilder().build();
+    }
+
+
+    @GET
+    @Path("{id:\\d+}/relations")
+    public JsonObject getSenseRelations(@HeaderParam("Accept-Language") Locale locale,
+                              @PathParam("id") final Long id) {
+        return service.findByIdWithRelations(id)
+                .map(s -> entityBuilder.buildSenseRelations(s,locale))
+                .orElse(Json.createObjectBuilder().build());
+    }
+
+    @GET
+    @Path("{senseId:\\d+}/relations/{relationId:\\d+}")
+    public JsonObject getSenseRelation(@HeaderParam("Accept-Language") Locale locale,
+                                      @PathParam("senseId") final Long senseId,  @PathParam("relationId") final Long relationId) {
+        return service.findById(senseId)
+                .map(z -> entityBuilder.buildSenseRelation(z,service.findSenseRelation(relationId)
+                        .get(),locale))
+                .orElse(Json.createObjectBuilder().build());
+    }
+
+
+    @GET
+    @Path("{id:\\d+}/emotional-annotations")
+    public JsonArray getEmotionalAnnotations(@HeaderParam("Accept-Language") Locale locale,
+                                 @PathParam("id") final Long id) {
+
+        List<SenseEmotions> emotions = service.findSenseEmotion(id);
+        emotions.sort((e1, e2) -> Boolean.compare(e1.isSuperAnnotation(), e2.isSuperAnnotation()));
+
+        return emotions
+                .stream()
+                .map(e -> entityBuilder.buildEmotionalAnnotation(e, resourceUriBuilder.forEmotionalAnnotations(e.getSense(), uriInfo)))
+                .collect(JsonCollectors.toJsonArray());
+    }
+
+}

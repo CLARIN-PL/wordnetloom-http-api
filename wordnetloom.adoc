@@ -1,0 +1,576 @@
+= Wordnetloom resource links
+
+
+`GET /`:
+
+----
+{
+    "_links": {
+         "search": "http://wordnetloom/resources/search",
+         "graphs": "http://wordnetloom/resources/graph",
+         "lexicons": "http://wordnetloom/resources/lexicons",
+         "senses": "http://wordnetloom/resources/senses",
+         "synsets": "http://wordnetloom/resources/synsets",
+         "relation_types": "http://wordnetloom/resources/relation-types",
+         "dictionaries": "http://wordnetloom/resources/dictionaries",
+         "settings":  "http://wordnetloom/resources/settings",
+    }
+}
+----
+
+`GET /senses`:
+
+----
+{
+    "page": 1,
+    "per_page": 10,
+    "total_count" : 45464,
+    [
+        {
+            "lexicon": {
+                "id": 1,
+                "name": "Słowosieć",
+                "_links": {
+                     "self":  "http://wordnetloom/resources/dictionaries/lexicons/1"
+                 }
+            },
+            "register": {
+                "id": 1,
+                "name": "og.",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/registers/1"
+                }
+            },
+            "aspect": {
+                "id": 1,
+                "name": "czasownik dokonany",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/aspects/1"
+                }
+            },
+            "lemma": "zamek",
+            "variant": 1,
+            "part-of-speech": {
+                "id": 1,
+                "name": "czasownik",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/parts-of-speech/1"
+                }
+            },
+            "domain": {
+                "id": 1,
+                "name": "msc",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/domains/1"
+                },
+            "definition": "budowla obronna",
+            "link": "http://wikipedia...",
+            "status": {
+                "id": 1,
+                "name": "Gotowy",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/statuses/1"
+                }
+            },
+            "_links": {
+                "self": "http://wordnetloom/resources/senses/1",
+                // server logic: only available if examples.size > 0
+                "examples": "http://wordnetloom/resources/senses/1/examples",
+                // server logic: only available if incoming-relations.size > 0
+                "incoming-relations": "http://wordnetloom/resources/senses/1/incoming-relations",
+                // server logic: only available if outgoing-relations.size > 0
+                "outgoing-relations": "http://wordnetloom/resources/senses/1/outgoing-relations",
+                // server logic: only available if emotional-annotations.size > 0
+                "emotional-annotations": http://wordnetloom/resources/senses/1/emotional-annotations,
+                "graphs": "http://wordnetloom/resources/graphs/senses/1"
+            }
+        },
+
+        {
+            other sense
+        },
+    ]
+}
+----
+
+`GET /senses/1`:
+
+----
+{
+            "lexicon": {
+                "id": 1,
+                "name": "Słowosieć",
+                "_links": {
+                     "self":  "http://wordnetloom/resources/dictionaries/lexicons/1"
+                 }
+            },
+            "register": {
+                "id": 1,
+                "name": "og.",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/registers/1"
+                }
+            },
+            "aspect": {
+                "id": 1,
+                "name": "czasownik dokonany",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/aspects/1"
+                }
+            },
+            "lemma": "zamek",
+            "variant": 1,
+            "part-of-speech": {
+                "id": 1,
+                "name": "czasownik",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/parts-of-speech/1"
+                }
+            },
+            "domain": {
+                "id": 1,
+                "name": "msc",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/domains/1"
+                },
+            "definition": "budowla obronna",
+            "link": "http://wikipedia...",
+            "status": {
+                "id": 1,
+                "name": "Gotowy",
+                "_links": {
+                    "self":  "http://wordnetloom/resources/dictionaries/statuses/1"
+                }
+            },
+            "_links": {
+                "self": "http://wordnetloom/resources/senses/1",
+                // server logic: only available if examples.size > 0
+                "examples": "http://wordnetloom/resources/senses/1/examples",
+                // server logic: only available if incoming-relations.size > 0
+                "incoming-relations": "http://wordnetloom/resources/senses/1/incoming-relations",
+                // server logic: only available if outgoing-relations.size > 0
+                "outgoing-relations": "http://wordnetloom/resources/senses/1/outgoing-relations",
+                // server logic: only available if emotional-annotations.size > 0
+                "emotional-annotations": http://wordnetloom/resources/senses/1/emotional-annotations,
+                "graphs": "http://wordnetloom/resources/graphs/senses/1"
+            }
+        }
+----
+
+`GET /senses/1/examples`:
+
+----
+[
+    {
+       "id": 1,
+        "text": "Przykład zxcxc";
+        "type"" "W"
+        "_links": {
+            "self": "http://wordnetloom/resources/senses/1/examples/1",
+        }
+    },
+
+    {
+        other examples
+    }
+    "_links": {
+        "self": "http://wordnetloom/resources/senses/1/examples",
+    }
+]
+----
+
+`GET /senses/1/examples/1`:
+
+----
+{
+    "id": 1,
+    "text": "Przykład zxcxc";
+    "type": "W",
+    "_links": {
+        "self": "http://wordnetloom/resources/senses/1/examples/1",
+    }
+}
+----
+
+`GET /senses/1/relations`:
+
+----
+[
+    {
+        "target": {
+            "id": 45,
+            "label": "zamek 3 (zw)",
+            "_links": {
+                "self": "http://wordnetloom/resources/senses/45"
+            }
+        },
+        "relation-type": {
+            "id": 11,
+            "name": "syn",
+            "_links": {
+                "self": "http://wordnetloom/resources/relation-types/11"
+            }
+        }
+        "_links": {
+            "self": "http://wordnetloom/resources/senses/1/incoming-relations/45",
+        }
+    },
+    {
+        other sense relations
+    }
+    "_links": {
+        "self": "http://wordnetloom/resources/senses/1/relations",
+    }
+]
+----
+
+`GET /senses/1/relations/1`:
+
+----
+{
+    "target": {
+        "id": 45,
+        "label": "zamek 3 (zw)",
+         "_links": {
+            "self": "http://wordnetloom/resources/senses/45"
+         }
+    },
+    "relation-type": {
+        "id": 45,
+        "name": "syn",
+        "_links": {
+            "self": "http://wordnetloom/resources/relation-types/45"
+        }
+    }
+    "_links": {
+        "self": "http://wordnetloom/resources/senses/1/incoming-relations/1",
+    }
+}
+----
+
+`GET /senses/1/emotional-annotations`:
+
+----
+[
+    annotation_1 : {
+        "id": 2,
+        "emotional_characteristic": true,
+        "super_annotation": false,
+        "emotions": ["good","bad"],
+        "valuations": ["asd", "asdd"],
+        "markedness": "+ m",
+        "example_1": "asdsadsad sadasdasd",
+        "example_2": "asdsadsad sadasdasd",
+        "_links": {
+            "self": "http://wordnetloom/resources/senses/1/emotional-annotations/2",
+        }
+    },
+    annotation_2 :{
+        // ....
+    },
+    annotation_3 :{
+        // ....
+    },
+
+]
+----
+
+`GET /graphs`:
+
+----
+{
+    "_links": {
+        "senses":  "http://wordnetloom/resources/graphs/sense/<id>"
+        "synsets":  "http://wordnetloom/resources/graphs/synset/<id>"
+    }
+}
+----
+
+`GET /relation-types`:
+
+----
+[
+{
+    "id": 10
+    "type": "synset relation"
+    "parent": {
+        "id": 1
+        "name": "xxx"
+        "_links": {
+            "self": ""
+        }
+    },
+    "name": "hiperonima",
+    "description": "opis jakis",
+    "display": "zamz cxcx xcxzz ccef";
+    "short_name": "hip"
+    "allowed_lexicons": [
+        {
+            "id": 1
+            "name": "xxx"
+            "_links": {
+                "self": ""
+            }
+        }
+    ],
+    "allowed_parts_of_speech": [
+        {
+            "id": 1
+            "name": "xxx"
+            "_links": {
+                "self": ""
+            }
+        }
+    ],
+    "auto_revers": false,
+    "multilingual": false,
+
+    "reverse": {
+        "id": 1
+        "name": "xxx"
+        "_links": {
+            "self": ""
+        }
+    },
+    "_links": {
+        "_self":  "http://wordnetloom/resources/relation-types/3"
+        "tests":  "http://wordnetloom/resources/relation-types/3/tests"
+    }
+},
+
+{
+    /// other
+}
+]
+----
+
+`GET /relation-types/3`:
+
+----
+{
+    "id": 10
+    "type": "synset relation"
+    "parent": {
+        "id": 1
+        "name": "xxx"
+        "_links": {
+            "self": ""
+        }
+    },
+    "name": "hiperonima",
+    "description": "opis jakis",
+    "display": "zamz cxcx xcxzz ccef";
+    "short_name": "hip"
+    "allowed_lexicons": [
+        {
+            "id": 1
+            "name": "xxx"
+            "_links": {
+                "self": ""
+            }
+        }
+    ],
+    "allowed_parts_of_speech": [
+        {
+            "id": 1
+            "name": "xxx"
+            "_links": {
+                "self": ""
+            }
+        }
+    ],
+    "auto_revers": false,
+    "multilingual": false,
+
+    "reverse": {
+        "id": 1
+        "name": "xxx"
+        "_links": {
+            "self": ""
+        }
+    },
+    "_links": {
+        "_self":  "http://wordnetloom/resources/relation-types/3"
+        "tests":  "http://wordnetloom/resources/relation-types/3/tests"
+    }
+}
+----
+
+`GET /synsets`:
+
+----
+[
+{
+    "id": 2,
+    "lexicon": {
+    }
+    "senses": [
+
+
+    ]
+    "definition": "",
+    "_links": {
+            "_self":  "http://wordnetloom/resources/synsets/3",
+            "examples":  "http://wordnetloom/resources/synsets/3/examples",
+            "relations":  "http://wordnetloom/resources/synsets/3/relations",
+    }
+},
+{
+    //other
+}
+
+]
+----
+
+`GET /synsets/1`:
+
+----
+{
+    "id": 2,
+    "lexicon": {
+    }
+    "senses": [
+
+
+    ]
+    "definition": "",
+    "_links": {
+            "_self":  "http://wordnetloom/resources/synsets/3",
+            "examples":  "http://wordnetloom/resources/synsets/3/examples",
+            "relations":  "http://wordnetloom/resources/synsets/3/relations",
+    }
+}
+----
+
+`GET /synsets/1/examples`:
+
+----
+
+`GET /synsets/1/examples/1`:
+
+----
+
+`GET /synsets/1/relations`:
+
+  {
+    "root": "zamek 1 (msx)",
+    "incoming": {
+
+    },
+    "outgoing": {
+
+    }
+
+----
+
+`GET /settings`:
+
+----
+
+`GET /lexicons`:
+
+----
+[
+    {
+        "id": 1,
+        "name": "Słowosieć",
+        "language": "Polish",
+        "identifier: "PLWN",
+        "version": "3.2",
+        "_links": {
+            "self":  "http://wordnetloom/resources/dictionaries/lexicons/1"
+        }
+    },
+
+    {
+        other lexicons
+    },
+]
+----
+
+`GET /lexicons`:
+
+----
+{
+    "id": 1,
+    "name": "Słowosieć",
+    "language": "Polish",
+    "identifier: "PLWN",
+    "version": "3.2",
+    "_links": {
+        "self":  "http://wordnetloom/resources/dictionaries/lexicons/1"
+    }
+}
+----
+
+`GET /dictionaries`:
+
+----
+{
+     "_links": {
+        "self":  "http://wordnetloom/resources/dictionaries",
+        "parts-of-speech": "http://wordnetloom/resources/dictionaries/parts-of-speech",
+        "domains": "http://wordnetloom/resources/dictionaries/domains",
+        "emotions": "http://wordnetloom/resources/dictionaries/emotions",
+        "valuations": "http://wordnetloom/resources/dictionaries/valuations",
+        "markedness": "http://wordnetloom/resources/dictionaries/markedness",
+        "statuses": "http://wordnetloom/resources/dictionaries/statuses",
+        "aspects": "http://wordnetloom/resources/dictionaries/aspects",
+        "registers": "http://wordnetloom/resources/dictionaries/registers"
+     }
+}
+
+----
+
+`GET /dictionaries/emotions`:
+
+----
+[
+    {
+        "id": 23,
+        "name": "good",
+        //only if not null
+        "description": "describe ...",
+        "_links": {
+            "self":  "http://wordnetloom/resources/dictionaries/emotions/23"
+        }
+    },
+
+    {
+        other emotions
+    },
+]
+----
+
+`GET /dictionaries/emotions/23`:
+
+----
+{
+    "id": 23,
+    "name": "good",
+    //only if not null
+    "description": "describe ...",
+    "_links": {
+        "self":  "http://wordnetloom/resources/dictionaries/emotions/23"
+    }
+}
+----
+
+`GET /dictionaries/parts-of-speech`:
+
+-----
+[
+    {
+        "id": 1,
+        "name": "czasownik",
+        //only if not null
+        "description": "describe ...",
+        "_links": {
+            "self":  "http://wordnetloom/resources/dictionaries/parts-of-speech/1"
+        }
+    },
+
+    {
+        other emotions
+    },
+]
