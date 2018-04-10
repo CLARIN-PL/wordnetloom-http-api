@@ -50,7 +50,7 @@ public class SynsetResource {
     public JsonObject getSynsetRelations(@HeaderParam("Accept-Language") Locale locale,
                                    @PathParam("id") final Long id) {
         return service.findSynsetRelations(id)
-                .map(s -> entityBuilder.buildSynsetRelations(s, locale))
+                .map(s -> entityBuilder.buildSynsetRelations(service.findSynsetHead(id).get(),s, locale))
                 .orElse(Json.createObjectBuilder().build());
     }
 

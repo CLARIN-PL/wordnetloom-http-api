@@ -123,10 +123,21 @@ public class SenseService {
         }
     }
 
-    public List<SenseEmotions> findSenseEmotion(Long id) {
+    public List<SenseEmotions> findSenseEmotions(Long id) {
         return em.createNamedQuery(SenseEmotions.FIND_BY_SENSE_ID, SenseEmotions.class)
                 .setParameter("id", id)
                 .getResultList();
+    }
+
+    public Optional<SenseEmotions> findSenseEmotion(Long id){
+        try {
+            return Optional.of(
+                    em.createNamedQuery(SenseEmotions.FIND_BY_ID, SenseEmotions.class)
+                            .setParameter("id",id)
+                            .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<SenseRelation> findSenseRelation(Long id){

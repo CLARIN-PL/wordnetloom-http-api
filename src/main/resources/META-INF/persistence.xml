@@ -3,7 +3,7 @@
     <persistence-unit name="wordnetPU" transaction-type="JTA">
         <jta-data-source>java:/jdbc/datasources/wordnetDS</jta-data-source>
         <properties>
-            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
             <property name="hibernate.connection.useUnicode" value="true"/>

@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.json.*;
 import javax.json.stream.JsonCollectors;
 import javax.ws.rs.core.UriInfo;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -342,11 +343,11 @@ public class EntityBuilder {
                 .build();
     }
 
-    public JsonObject buildSynsetRelations(Synset synset, Locale locale) {
+    public JsonObject buildSynsetRelations(Synset synset,Map<String, List<Object[]>> relations, Locale locale) {
         return Json.createObjectBuilder()
                 .add("root", buildLabel(synset, locale))
-                .add("incoming", buildSynsetRelations(synset.getIncomingRelations(), true, locale))
-                .add("outgoing", buildSynsetRelations(synset.getOutgoingRelations(), false, locale))
+                .add("incoming", buildSynsetRelations(relations.get("incoming"), locale))
+                .add("outgoing", buildSynsetRelations(relations.get("outgoing"), locale))
                 .build();
     }
 
@@ -358,12 +359,11 @@ public class EntityBuilder {
                 .build();
     }
 
-
-    public JsonObject buildSynsetRelation(Synset s, SynsetRelation sr, Locale locale) {
+    public JsonObject buildSynsetRelation(Object[] row, Locale locale) {
         return Json.createObjectBuilder()
-                .add("relation_id", sr.getId())
-                .add("target", s.getId())
-                .add("label", buildLabel(s, locale))
+                .add("relation_id", (BigInteger) row[2])
+                .add("target", (BigInteger) row[3])
+                .add("label", buildLabel((String) row[4], ((BigInteger)row[5]).longValue(), locale))
                 .build();
     }
 
@@ -463,8 +463,8 @@ public class EntityBuilder {
                     .collect(JsonCollectors.toJsonArray());
 
             JsonObject rel = Json.createObjectBuilder()
-                    .add("id", k.getId())
-                    .add("name", loc.find(k.getName(), locale))
+                    .add("elation_type_id", k.getId())
+                    .add("relation_type_name", loc.find(k.getName(), locale))
                     .add("rows", a)
                     .build();
 
@@ -473,25 +473,21 @@ public class EntityBuilder {
         return builder.build();
     }
 
-    private JsonArray buildSynsetRelations(Set<SynsetRelation> list, boolean parent, Locale locale) {
+    private JsonArray buildSynsetRelations(List<Object[]> list,  Locale locale) {
 
         JsonArrayBuilder builder = createArrayBuilder();
 
-        Map<RelationType, List<SynsetRelation>> map = list.stream()
-                .collect(Collectors.groupingBy(SynsetRelation::getRelationType));
+        Map<String, List<Object[]>> map = list.stream()
+                .collect(Collectors.groupingBy(o -> loc.find(((BigInteger) o[1]).longValue(),locale)));
 
         map.forEach((k, v) -> {
 
             JsonArray a = v.stream()
-                    .map(r -> {
-                        Synset s = parent ? r.getParent() : r.getChild();
-                        return buildSynsetRelation(s, r, locale);
-                    })
+                    .map(r -> buildSynsetRelation(r, locale))
                     .collect(JsonCollectors.toJsonArray());
 
             JsonObject rel = Json.createObjectBuilder()
-                    .add("id", k.getId())
-                    .add("name", loc.find(k.getName(), locale))
+                    .add("relation_type_name", k)
                     .add("rows", a)
                     .build();
 
@@ -506,11 +502,16 @@ public class EntityBuilder {
         builder.add("id", se.getId());
         builder.add("emotional_characteristic", se.isHasEmotionalCharacteristic());
         builder.add("super_annotation", se.isSuperAnnotation());
-        builder.add("emotions", se.getEmotions());
-        builder.add("valuations", se.getValuations());
-        builder.add("markedness", se.getMarkedness());
-        builder.add("example1", se.getExample1());
-        builder.add("example2", se.getExample2());
+        if(se.getEmotions() != null)
+            builder.add("emotions", se.getEmotions());
+        if(se.getValuations() != null)
+            builder.add("valuations", se.getValuations());
+        if(se.getMarkedness() != null)
+            builder.add("markedness", se.getMarkedness());
+        if(se.getExample1() != null)
+            builder.add("example1", se.getExample1());
+        if(se.getExample2() != null)
+            builder.add("example2", se.getExample2());
 
         final JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
@@ -550,6 +551,11 @@ public class EntityBuilder {
         return synset.getSenses().stream().findFirst()
                 .map(s -> synset.getAbstract() ? "S ": ""+ s.getWord() + " " + s.getVariant() + " (" + loc.find(s.getDomain().getName(), locale) + ")")
                 .orElse("");
+
+    }
+
+    public String buildLabel(final String lemma, final Long domainNameId, final Locale locale) {
+        return  lemma + " (" + loc.find(domainNameId, locale) + ")";
 
     }
 }

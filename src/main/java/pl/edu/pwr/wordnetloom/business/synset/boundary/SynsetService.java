@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.Optional;
+import java.util.*;
 
 @Stateless
 public class SynsetService {
@@ -50,12 +50,41 @@ public class SynsetService {
         }
     }
 
-    public Optional<Synset> findSynsetRelations(Long id) {
+    public Optional<Map<String, List<Object[]>>> findSynsetRelations(Long id) {
+
         try {
-            return Optional.of(
-                    em.createNamedQuery(Synset.FIND_BY_ID_WITH_RELATIONS_AND_DOMAINS, Synset.class)
-                            .setParameter("id", id)
-                            .getSingleResult());
+
+            String incomingQuery = "SELECT r1.synset_relation_type_id as type, rt1.name_id as nameId, r1.id as relId, r1.child_synset_id as synsetId, concat(w.word,' ',s.variant) as lemma, dom1.name_id as domainId " +
+                    "FROM synset_relation r1 " +
+                    "LEFT JOIN relation_type rt1 ON r1.synset_relation_type_id = rt1.id " +
+                    "LEFT JOIN sense s ON s.synset_id = r1.child_synset_id " +
+                    "LEFT JOIN word w ON w.id = s.word_id " +
+                    "LEFT JOIN domain dom1 ON  dom1.id = s.domain_id " +
+                    "WHERE r1.parent_synset_id = ?1 AND s.synset_position = ?2 " +
+                    "ORDER BY type, lemma";
+
+            String outgoingQuery = "SELECT r1.synset_relation_type_id as type, rt1.name_id as nameId, r1.id  as relId, r1.parent_synset_id, concat(w.word,' ',s.variant) as lemma, dom1.name_id as domainId "+
+                    "FROM synset_relation r1 " +
+                    "LEFT JOIN relation_type rt1 ON r1.synset_relation_type_id = rt1.id " +
+                    "LEFT JOIN sense s ON s.synset_id = r1.parent_synset_id " +
+                    "LEFT JOIN word w ON w.id = s.word_id " +
+                    "LEFT JOIN domain dom1 ON  dom1.id = s.domain_id " +
+                    "WHERE r1.child_synset_id = ?1 AND s.synset_position = ?2 " +
+                    "ORDER BY type, lemma";
+
+            List<Object[]> incoming = em.createNativeQuery(incomingQuery)
+                    .setParameter(1, id)
+                    .setParameter(2, Synset.SYNSET_HEAD_POSITION)
+                    .getResultList();
+
+            List<Object[]> outgoing =  em.createNativeQuery(outgoingQuery)
+                    .setParameter(1, id)
+                    .setParameter(2, Synset.SYNSET_HEAD_POSITION)
+                    .getResultList();
+            Map<String, List<Object[]>> result = new HashMap<>();
+            result.put("incoming", incoming);
+            result.put("outgoing", outgoing);
+             return Optional.of(result);
         } catch (NoResultException e) {
             return Optional.empty();
         }

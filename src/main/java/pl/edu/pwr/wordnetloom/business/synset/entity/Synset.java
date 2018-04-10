@@ -24,18 +24,19 @@ import java.util.Set;
 
 @NamedQuery(name = Synset.FIND_SYNSET_HEAD,
         query = "SELECT s FROM Synset s " +
-                "LEFT JOIN s.senses se " +
-                "LEFT JOIN se.word w " +
-                "LEFT JOIN se.domain d " +
+                "LEFT JOIN FETCH s.senses se " +
+                "LEFT JOIN FETCH se.word w " +
+                "LEFT JOIN FETCH se.domain d " +
                 "WHERE se.synsetPosition = :synsetPosition " +
                 "and s.id = :synsetId"
 )
 @NamedQuery(name = Synset.FIND_BY_ID_WITH_RELATIONS_AND_DOMAINS,
         query = "SELECT DISTINCT s  FROM Synset s " +
-                "LEFT JOIN  s.incomingRelations inr " +
-                "LEFT JOIN  s.outgoingRelations outr " +
-                "LEFT JOIN  inr.parent p " +
-                "LEFT JOIN  outr.child c " +
+                "LEFT JOIN FETCH  s.incomingRelations inr " +
+                "LEFT JOIN FETCH  s.outgoingRelations outr " +
+                "LEFT JOIN FETCH s.senses se " +
+//                "LEFT JOIN FETCH  inr.parent p " +
+  //              "LEFT JOIN FETCH  outr.child c " +
                 "WHERE s.id = :id")
 public class Synset implements Serializable {
 

@@ -13,6 +13,7 @@ import pl.edu.pwr.wordnetloom.business.relationtype.entity.RelationType;
 import pl.edu.pwr.wordnetloom.business.search.boundary.SearchResource;
 import pl.edu.pwr.wordnetloom.business.sense.boundary.SenseResource;
 import pl.edu.pwr.wordnetloom.business.sense.enity.Sense;
+import pl.edu.pwr.wordnetloom.business.sense.enity.SenseEmotions;
 import pl.edu.pwr.wordnetloom.business.sense.enity.SenseExample;
 import pl.edu.pwr.wordnetloom.business.settings.boundary.SettingsResource;
 import pl.edu.pwr.wordnetloom.business.synset.boundary.SynsetResource;
@@ -95,6 +96,11 @@ public class ResourceUriBuilder {
 
     public URI forEmotionalAnnotations(Sense s, UriInfo uriInfo) {
         return createResourceUri(SenseResource.class, "getEmotionalAnnotations", s.getId(), uriInfo);
+    }
+
+    public URI forEmotionalAnnotation(SenseEmotions e, UriInfo uriInfo) {
+        return uriInfo.getBaseUriBuilder().path(SenseResource.class)
+                .path(SenseResource.class, "getEmotionalAnnotation").build(e.getSense().getId(), e.getId());
     }
 
     public URI forSearch(UriInfo uriInfo) {

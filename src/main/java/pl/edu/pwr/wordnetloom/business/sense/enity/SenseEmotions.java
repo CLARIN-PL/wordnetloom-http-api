@@ -4,13 +4,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "sense_emotions")
-@NamedQueries({
-        @NamedQuery(name = SenseEmotions.FIND_BY_SENSE_ID, query = "SELECT DISTINCT se FROM SenseEmotions se WHERE se.sense.id = :id"),
-})
+@Table(name = "emotional_annotations")
+@NamedQuery(name = SenseEmotions.FIND_BY_SENSE_ID, query = "SELECT DISTINCT se FROM SenseEmotions se LEFT JOIN FETCH se.sense WHERE se.sense.id = :id")
+@NamedQuery(name = SenseEmotions.FIND_BY_ID, query = "SELECT DISTINCT se FROM SenseEmotions se LEFT JOIN FETCH se.sense WHERE se.id = :id")
 public class SenseEmotions implements Serializable {
 
     public static final String FIND_BY_SENSE_ID = "SenseEmotions.findBySenseId";
+    public static final String FIND_BY_ID = "SenseEmotions.findById";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,4 +107,5 @@ public class SenseEmotions implements Serializable {
     public void setExample2(String example2) {
         this.example2 = example2;
     }
+
 }

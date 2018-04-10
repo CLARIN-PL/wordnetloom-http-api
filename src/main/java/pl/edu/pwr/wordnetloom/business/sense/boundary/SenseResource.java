@@ -95,13 +95,23 @@ public class SenseResource {
     public JsonArray getEmotionalAnnotations(@HeaderParam("Accept-Language") Locale locale,
                                  @PathParam("id") final Long id) {
 
-        List<SenseEmotions> emotions = service.findSenseEmotion(id);
+        List<SenseEmotions> emotions = service.findSenseEmotions(id);
         emotions.sort((e1, e2) -> Boolean.compare(e1.isSuperAnnotation(), e2.isSuperAnnotation()));
 
         return emotions
                 .stream()
-                .map(e -> entityBuilder.buildEmotionalAnnotation(e, resourceUriBuilder.forEmotionalAnnotations(e.getSense(), uriInfo)))
+                .map(e -> entityBuilder.buildEmotionalAnnotation(e, resourceUriBuilder.forEmotionalAnnotation(e, uriInfo)))
                 .collect(JsonCollectors.toJsonArray());
+    }
+
+    @GET
+    @Path("{id:\\d+}/emotional-annotations/{annotationId:\\d+}")
+    public JsonObject getEmotionalAnnotation(@HeaderParam("Accept-Language") Locale locale,
+                                             @PathParam("id") final Long id, @PathParam("annotationId") final Long annotationId) {
+
+       return service.findSenseEmotion(annotationId)
+               .map(e -> entityBuilder.buildEmotionalAnnotation(e, resourceUriBuilder.forEmotionalAnnotation(e, uriInfo)))
+               .orElse(Json.createObjectBuilder().build());
     }
 
 }
