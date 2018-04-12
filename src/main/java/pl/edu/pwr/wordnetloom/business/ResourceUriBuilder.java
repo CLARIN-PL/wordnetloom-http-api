@@ -90,8 +90,8 @@ public class ResourceUriBuilder {
     }
 
     public URI forSenseExample(SenseExample se, UriInfo uriInfo) {
-        return uriInfo.getBaseUriBuilder().path(SenseExample.class)
-                .path(SenseExample.class, "getSenseExample").build(se.getSenseAttributes().getSense().getId(), se.getId());
+        return uriInfo.getBaseUriBuilder().path(SenseResource.class)
+                .path(SenseResource.class, "getSenseExample").build(se.getSenseAttributes().getId(), se.getId());
     }
 
     public URI forEmotionalAnnotations(Sense s, UriInfo uriInfo) {
@@ -169,8 +169,8 @@ public class ResourceUriBuilder {
     }
 
     public URI forSynsetExample(SynsetExample se, UriInfo uriInfo) {
-        return uriInfo.getBaseUriBuilder().path(SynsetExample.class)
-                .path(SynsetExample.class, "getSynsetExample").build(se.getSynsetAttributes().getSynset().getId(), se.getId());
+        return uriInfo.getBaseUriBuilder().path(SynsetResource.class)
+                .path(SynsetResource.class, "getSynsetExample").build(se.getSynsetAttributes().getId(), se.getId());
     }
 
     public URI forSynsetRelations(Synset s, UriInfo uriInfo) {

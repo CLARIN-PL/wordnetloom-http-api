@@ -5,7 +5,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "sense_examples")
+@NamedQuery(name = SenseExample.FIND_BY_ID, query = "SELECT ex FROM SenseExample ex WHERE ex.id = :id")
 public class SenseExample implements Serializable {
+
+    public static final String FIND_BY_ID = "SenseExample.finaById";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

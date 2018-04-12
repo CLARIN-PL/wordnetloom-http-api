@@ -5,7 +5,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "synset_examples")
+@NamedQuery(name = SynsetExample.FIND_BY_ID, query = "SELECT ex FROM SynsetExample ex WHERE ex.id = :id")
 public class SynsetExample implements Serializable {
+
+    public static final String FIND_BY_ID = "SynsetExample.finaById";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

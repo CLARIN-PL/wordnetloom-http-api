@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 @Path("/synsets")
 @Produces(MediaType.APPLICATION_JSON)
@@ -71,7 +72,9 @@ public class SynsetResource {
     @Path("{synsetId:\\d+}/examples/{exampleId:\\d+}")
     public JsonObject getSynsetExample(@HeaderParam("Accept-Language") Locale locale,
                                        @PathParam("synsetId") final Long senseId, @PathParam("exampleId") final Long exampleId) {
-        return Json.createObjectBuilder().build();
+        return service.findSynsetExample(exampleId)
+                .map(e -> entityBuilder.buildSynsetExample(e, resourceUriBuilder.forSynsetExample(e, uriInfo)))
+                .orElse(Json.createObjectBuilder().build());
     }
 
 }

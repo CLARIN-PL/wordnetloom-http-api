@@ -2,10 +2,7 @@ package pl.edu.pwr.wordnetloom.business.sense.boundary;
 
 import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilter;
 import pl.edu.pwr.wordnetloom.business.sense.control.SenseSpecification;
-import pl.edu.pwr.wordnetloom.business.sense.enity.Sense;
-import pl.edu.pwr.wordnetloom.business.sense.enity.SenseAttributes;
-import pl.edu.pwr.wordnetloom.business.sense.enity.SenseEmotions;
-import pl.edu.pwr.wordnetloom.business.sense.enity.SenseRelation;
+import pl.edu.pwr.wordnetloom.business.sense.enity.*;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -116,6 +113,17 @@ public class SenseService {
         try {
             return Optional.of(
                     em.createNamedQuery(SenseAttributes.FIND_BY_ID, SenseAttributes.class)
+                            .setParameter("id",id)
+                            .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<SenseExample> findSenseExample(Long id) {
+        try {
+            return Optional.of(
+                    em.createNamedQuery(SenseExample.FIND_BY_ID, SenseExample.class)
                             .setParameter("id",id)
                             .getSingleResult());
         } catch (NoResultException e) {

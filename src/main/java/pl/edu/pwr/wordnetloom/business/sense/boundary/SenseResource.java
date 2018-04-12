@@ -56,17 +56,23 @@ public class SenseResource {
 
     @GET
     @Path("{senseId:\\d+}/examples")
-    public JsonObject getSenseExamples(@HeaderParam("Accept-Language") Locale locale,
+    public JsonArray getSenseExamples(@HeaderParam("Accept-Language") Locale locale,
                                @PathParam("senseId") final Long senseId) {
-
-       return Json.createObjectBuilder().build();
+        return service.findSenseAttributes(senseId)
+                .map(s -> s.getExamples()
+                        .stream()
+                        .map(e -> entityBuilder.buildSenseExample(e, resourceUriBuilder.forSenseExample(e, uriInfo)))
+                        .collect(JsonCollectors.toJsonArray()))
+                .orElse(Json.createArrayBuilder().build());
     }
 
     @GET
     @Path("{senseId:\\d+}/examples/{exampleId:\\d+}")
     public JsonObject getSenseExample(@HeaderParam("Accept-Language") Locale locale,
                                       @PathParam("senseId") final Long senseId,  @PathParam("exampleId") final Long exampleId) {
-        return Json.createObjectBuilder().build();
+        return service.findSenseExample(exampleId)
+                .map(e -> entityBuilder.buildSenseExample(e, resourceUriBuilder.forSenseExample(e, uriInfo)))
+                .orElse(Json.createObjectBuilder().build());
     }
 
 

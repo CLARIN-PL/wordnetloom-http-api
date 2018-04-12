@@ -21,7 +21,7 @@ RUN echo "=> Starting WildFly server" && \
         --user-name=${DB_USER} \
         --password=${DB_PASS} \
         --driver-name=mysql \
-        --connection-url=jdbc:mysql://${DB_URI}/${DB_NAME}?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC \
+        --connection-url=jdbc:mysql://${DB_URI}/${DB_NAME}?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC \
         --use-ccm=false \
         --max-pool-size=25 \
         --blocking-timeout-wait-millis=5000 \

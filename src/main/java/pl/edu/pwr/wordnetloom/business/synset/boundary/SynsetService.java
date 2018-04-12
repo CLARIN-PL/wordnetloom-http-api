@@ -2,6 +2,7 @@ package pl.edu.pwr.wordnetloom.business.synset.boundary;
 
 import pl.edu.pwr.wordnetloom.business.synset.entity.Synset;
 import pl.edu.pwr.wordnetloom.business.synset.entity.SynsetAttributes;
+import pl.edu.pwr.wordnetloom.business.synset.entity.SynsetExample;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -37,6 +38,18 @@ public class SynsetService {
             return Optional.empty();
         }
     }
+
+    public Optional<SynsetExample> findSynsetExample(Long id) {
+        try {
+            return Optional.of(
+                    em.createNamedQuery(SynsetExample.FIND_BY_ID, SynsetExample.class)
+                            .setParameter("id", id)
+                            .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
 
     public Optional<Synset> findSynsetHead(Long id) {
         try {
