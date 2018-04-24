@@ -1,7 +1,7 @@
 package pl.edu.pwr.wordnetloom.business.sense.boundary;
 
 import pl.edu.pwr.wordnetloom.business.EntityBuilder;
-import pl.edu.pwr.wordnetloom.business.ResourceUriBuilder;
+import pl.edu.pwr.wordnetloom.business.LinkBuilder;
 import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilter;
 import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilterExtractorFromUrl;
 import pl.edu.pwr.wordnetloom.business.sense.enity.SenseAttributes;
@@ -32,7 +32,7 @@ public class SenseResource {
     EntityBuilder entityBuilder;
 
     @Inject
-    ResourceUriBuilder resourceUriBuilder;
+    LinkBuilder linkBuilder;
 
     @Context
     UriInfo uriInfo;
@@ -41,7 +41,10 @@ public class SenseResource {
     public JsonObject getSenses(@HeaderParam("Accept-Language") Locale locale) {
         final SearchFilter filter = new SearchFilterExtractorFromUrl(uriInfo).getFilter();
         final long count = service.countWithFilter(filter);
-        return entityBuilder.buildPaginatedSense(service.findAllPaginated(filter), count, uriInfo, locale);
+        return entityBuilder.buildPaginatedSense(service.findAllPaginated(filter), count,
+                filter.getPaginationData().getFirstResult(),
+                filter.getPaginationData().getMaxResults(),
+                uriInfo, locale);
     }
 
     @GET
@@ -50,7 +53,7 @@ public class SenseResource {
                             @PathParam("id") final Long id) {
         final SenseAttributes attributes = service.findSenseAttributes(id).orElse(null);
         return service.findById(id)
-                .map(s -> entityBuilder.buildSense(s, attributes, resourceUriBuilder.forSense(s, uriInfo), uriInfo, locale))
+                .map(s -> entityBuilder.buildSense(s, attributes, linkBuilder.forSense(s, uriInfo), uriInfo, locale))
                 .orElse(Json.createObjectBuilder().build());
     }
 
@@ -61,7 +64,7 @@ public class SenseResource {
         return service.findSenseAttributes(senseId)
                 .map(s -> s.getExamples()
                         .stream()
-                        .map(e -> entityBuilder.buildSenseExample(e, resourceUriBuilder.forSenseExample(e, uriInfo)))
+                        .map(e -> entityBuilder.buildSenseExample(e, linkBuilder.forSenseExample(e, uriInfo)))
                         .collect(JsonCollectors.toJsonArray()))
                 .orElse(Json.createArrayBuilder().build());
     }
@@ -71,7 +74,7 @@ public class SenseResource {
     public JsonObject getSenseExample(@HeaderParam("Accept-Language") Locale locale,
                                       @PathParam("senseId") final Long senseId,  @PathParam("exampleId") final Long exampleId) {
         return service.findSenseExample(exampleId)
-                .map(e -> entityBuilder.buildSenseExample(e, resourceUriBuilder.forSenseExample(e, uriInfo)))
+                .map(e -> entityBuilder.buildSenseExample(e, linkBuilder.forSenseExample(e, uriInfo)))
                 .orElse(Json.createObjectBuilder().build());
     }
 
@@ -106,7 +109,7 @@ public class SenseResource {
 
         return emotions
                 .stream()
-                .map(e -> entityBuilder.buildEmotionalAnnotation(e, resourceUriBuilder.forEmotionalAnnotation(e, uriInfo)))
+                .map(e -> entityBuilder.buildEmotionalAnnotation(e, linkBuilder.forEmotionalAnnotation(e, uriInfo)))
                 .collect(JsonCollectors.toJsonArray());
     }
 
@@ -116,7 +119,7 @@ public class SenseResource {
                                              @PathParam("id") final Long id, @PathParam("annotationId") final Long annotationId) {
 
        return service.findSenseEmotion(annotationId)
-               .map(e -> entityBuilder.buildEmotionalAnnotation(e, resourceUriBuilder.forEmotionalAnnotation(e, uriInfo)))
+               .map(e -> entityBuilder.buildEmotionalAnnotation(e, linkBuilder.forEmotionalAnnotation(e, uriInfo)))
                .orElse(Json.createObjectBuilder().build());
     }
 

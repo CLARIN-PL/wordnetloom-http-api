@@ -30,6 +30,8 @@ public class Lexicon implements Serializable {
     @Column(name = "lexicon_version")
     private String lexiconVersion;
 
+    private String icon;
+
     public Lexicon() {
     }
 
@@ -77,6 +79,14 @@ public class Lexicon implements Serializable {
 
     public void setLexiconVersion(String lexiconVersion) {
         this.lexiconVersion = lexiconVersion;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     @Override

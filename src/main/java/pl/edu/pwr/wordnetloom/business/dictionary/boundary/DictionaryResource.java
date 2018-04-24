@@ -1,7 +1,7 @@
 package pl.edu.pwr.wordnetloom.business.dictionary.boundary;
 
 import pl.edu.pwr.wordnetloom.business.EntityBuilder;
-import pl.edu.pwr.wordnetloom.business.ResourceUriBuilder;
+import pl.edu.pwr.wordnetloom.business.LinkBuilder;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.*;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ public class DictionaryResource {
     EntityBuilder entityBuilder;
 
     @Inject
-    ResourceUriBuilder resourceUriBuilder;
+    LinkBuilder linkBuilder;
 
     @Context
     UriInfo uriInfo;
@@ -39,14 +39,14 @@ public class DictionaryResource {
     public JsonObject getDictionaries(){
         final JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("_links", Json.createObjectBuilder()
-                .add("aspects", resourceUriBuilder.forAspects(uriInfo).toString())
-                .add("domains", resourceUriBuilder.forDomains(uriInfo).toString())
-                .add("parts_of_speech", resourceUriBuilder.forPartsOfSpeech(uriInfo).toString())
-                .add("statuses", resourceUriBuilder.forStatutes(uriInfo).toString())
-                .add("emotions", resourceUriBuilder.forEmotions(uriInfo).toString())
-                .add("registers", resourceUriBuilder.forRegisters(uriInfo).toString())
-                .add("valuations", resourceUriBuilder.forValuations(uriInfo).toString())
-                .add("markedness", resourceUriBuilder.forMarkedness(uriInfo).toString())
+                .add("aspects", this.linkBuilder.forAspects(uriInfo).toString())
+                .add("domains", this.linkBuilder.forDomains(uriInfo).toString())
+                .add("parts_of_speech", this.linkBuilder.forPartsOfSpeech(uriInfo).toString())
+                .add("statuses", this.linkBuilder.forStatutes(uriInfo).toString())
+                .add("emotions", this.linkBuilder.forEmotions(uriInfo).toString())
+                .add("registers", this.linkBuilder.forRegisters(uriInfo).toString())
+                .add("valuations", this.linkBuilder.forValuations(uriInfo).toString())
+                .add("markedness", this.linkBuilder.forMarkedness(uriInfo).toString())
                 .build());
 
         return linkBuilder.build();
@@ -129,7 +129,7 @@ public class DictionaryResource {
     public JsonArray getAllDomains(@HeaderParam("Accept-Language") Locale locale) {
         return service.findAllDomains()
                 .stream()
-                .map(d -> entityBuilder.buildDomain(d, resourceUriBuilder.forDomain(d, uriInfo), locale))
+                .map(d -> entityBuilder.buildDomain(d, linkBuilder.forDomain(d, uriInfo), locale))
                 .collect(JsonCollectors.toJsonArray());
     }
 
@@ -137,7 +137,7 @@ public class DictionaryResource {
     @Path("domains/{id:\\d+}")
     public JsonObject getDomain(@HeaderParam("Accept-Language") Locale locale, @PathParam("id") long id) {
         return service.findDomain(id)
-                .map(d -> entityBuilder.buildDomain(d, resourceUriBuilder.forDomain(d, uriInfo), locale))
+                .map(d -> entityBuilder.buildDomain(d, linkBuilder.forDomain(d, uriInfo), locale))
                 .orElse(Json.createObjectBuilder().build());
 
     }
@@ -146,7 +146,7 @@ public class DictionaryResource {
     @Path("parts-of-speech/{id:\\d+}")
     public JsonObject getPartOfSpeech(@HeaderParam("Accept-Language") Locale locale, @PathParam("id") long id) {
         return service.findPartsOfSpeech(id)
-                .map(p -> entityBuilder.buildPartOfSpeech(p,  resourceUriBuilder.forPartOfSpeech(p, uriInfo), locale))
+                .map(p -> entityBuilder.buildPartOfSpeech(p,  linkBuilder.forPartOfSpeech(p, uriInfo), locale))
                 .orElse(Json.createObjectBuilder().build());
     }
 
@@ -155,21 +155,21 @@ public class DictionaryResource {
     public JsonArray getAllPartsOfSpeech(@HeaderParam("Accept-Language") Locale locale) {
         return service.findAllPartsOfSpeech()
                 .stream()
-                .map(p -> entityBuilder.buildPartOfSpeech(p,  resourceUriBuilder.forPartOfSpeech(p, uriInfo), locale))
+                .map(p -> entityBuilder.buildPartOfSpeech(p,  linkBuilder.forPartOfSpeech(p, uriInfo), locale))
                 .collect(JsonCollectors.toJsonArray());
     }
 
     private <T> JsonArray buildDictionaryArray(final Class<T> clazz, String methodName, final Locale locale) {
         return service.findDictionaryByClass(clazz)
                 .stream()
-                .map(d -> entityBuilder.buildDictionary(d, resourceUriBuilder.forDictionary(d, methodName, uriInfo), locale))
+                .map(d -> entityBuilder.buildDictionary(d, linkBuilder.forDictionary(d, methodName, uriInfo), locale))
                 .collect(JsonCollectors.toJsonArray());
 
     }
 
     private JsonObject buildDictionary(long id, String methodName, final Locale locale) {
          return service.findDictionaryById(id)
-                .map(d -> entityBuilder.buildDictionary(d, resourceUriBuilder.forDictionary(d, methodName, uriInfo), locale))
+                .map(d -> entityBuilder.buildDictionary(d, linkBuilder.forDictionary(d, methodName, uriInfo), locale))
                 .orElse(Json.createObjectBuilder().build());
 
     }

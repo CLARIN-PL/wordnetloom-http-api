@@ -32,7 +32,7 @@ public class SearchResource {
         final SearchFilter searchFilter = new SearchFilterExtractorFromUrl(uriInfo).getFilter();
         Long count = service.countWithFilter(searchFilter);
         List<Sense> senses = service.findByFilter(searchFilter);
-        return entityBuilder.buildPaginatedSenseShort(senses, count, uriInfo, locale);
+        return entityBuilder.buildPaginatedSenseSearch(senses, count, searchFilter, uriInfo, locale);
 
     }
 }

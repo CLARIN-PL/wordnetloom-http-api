@@ -20,27 +20,13 @@ import static javax.json.Json.createObjectBuilder;
 public class RootResource {
 
     @Inject
-    ResourceUriBuilder resourceUriBuilder;
+    EntityBuilder entityBuilder;
 
     @Context
     UriInfo uriInfo;
 
     @GET
     public JsonObject getRoot() {
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
-        linkBuilder.add("application_name", "plWordNet HTTP API Endpoint");
-        linkBuilder.add("description", "plWordNet is a relational lexico-semantic dictionary which reflects the lexical system of the Polish language. plWN currently contains 191 000 nouns, verbs, adjectives, and adverbs, 285 000 word senses, and over 600 000 relations. It is now the largest wordnet in the world and is still growing.");
-        linkBuilder.add("_links", Json.createObjectBuilder()
-                .add("dictionaries", resourceUriBuilder.forDictionaries(uriInfo).toString())
-                .add("graphs", resourceUriBuilder.forGraphs(uriInfo).toString())
-                .add("lexicons", resourceUriBuilder.forLexicons(uriInfo).toString())
-                .add("relation_types", resourceUriBuilder.forRelationTypes(uriInfo).toString())
-                .add("search", resourceUriBuilder.forSearch(uriInfo).toString())
-                .add("senses", resourceUriBuilder.forSenses(uriInfo).toString())
-                .add("settings", resourceUriBuilder.forSettings(uriInfo).toString())
-                .add("synsets", resourceUriBuilder.forSynsets(uriInfo).toString())
-                .build());
-
-        return linkBuilder.build();
+        return entityBuilder.buildRootDocument(uriInfo);
     }
 }

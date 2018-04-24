@@ -37,12 +37,30 @@ import java.util.Set;
 
 @NamedQuery(name = Sense.FIND_BY_ID_WITH_WORD_AND_DOMAIN,
         query = "SELECT s FROM Sense s LEFT JOIN s.word w LEFT JOIN s.domain d  WHERE s.id = :id ")
+
+@NamedQuery(name = Sense.FIND_LEMMA_COUNT_BY_LEXICON_AND_POS,
+        query="SELECT COUNT(DISTINCT w.word) FROM Sense s " +
+                "LEFT JOIN s.word w "+
+                "WHERE s.lexicon.id = :lexiconId AND s.partOfSpeech.id = :posId")
+
+@NamedQuery(name = Sense.FIND_SENSE_COUNT_BY_LEXICON_AND_POS,
+        query="SELECT COUNT(s.id)FROM Sense s " +
+                "LEFT JOIN s.word w "+
+                "WHERE s.lexicon.id = :lexiconId AND s.partOfSpeech.id = :posId")
+
+@NamedQuery(name = Sense.FIND_SYNSET_COUNT_BY_LEXICON_AND_POS,
+        query="SELECT COUNT(DISTINCT syn.id)FROM Sense s " +
+                "LEFT JOIN s.synset syn "+
+                "WHERE s.lexicon.id = :lexiconId AND s.partOfSpeech.id = :posId")
 public class Sense implements Serializable {
 
     public static final String FIND_BY_ID_WITH_ATTRIBUTES = "Sense.findByIdWithAttributes";
     public static final String FIND_ALL_WITH_ATTRIBUTES = "Sense.findAllWithAttributes";
     public static final String FIND_BY_ID_WITH_RELATIONS_AND_DOMAINS = "Sense.findByIdWithRelationsAndDomains";
     public static final String FIND_BY_ID_WITH_WORD_AND_DOMAIN = "Sense.findByIdWithWordAndDomain";
+    public static final String FIND_LEMMA_COUNT_BY_LEXICON_AND_POS = "Sense.findLemmaCountByLexiconIdAndPos";
+    public static final String FIND_SENSE_COUNT_BY_LEXICON_AND_POS = "Sense.findSenseCountByLexiconIdAndPos";
+    public static final String FIND_SYNSET_COUNT_BY_LEXICON_AND_POS = "Sense.findSynsetCountByLexiconIdAndPos";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

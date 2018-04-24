@@ -2,6 +2,7 @@ package pl.edu.pwr.wordnetloom.business.settings.boundary;
 
 import pl.edu.pwr.wordnetloom.business.EntityBuilder;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.PartOfSpeech;
+import pl.edu.pwr.wordnetloom.business.lexicon.entity.Lexicon;
 import pl.edu.pwr.wordnetloom.business.relationtype.entity.RelationType;
 
 import javax.inject.Inject;
@@ -34,9 +35,13 @@ public class SettingsResource {
         List<RelationType> rt = em.createNamedQuery(RelationType.FIND_ALL, RelationType.class)
                 .getResultList();
 
+        List<Lexicon> lex = em.createNamedQuery(Lexicon.FIND_ALL, Lexicon.class)
+                .getResultList();
+
         return Json.createObjectBuilder()
                 .add("relations", entityBuilder.buildRelationTypeSettings(rt, locale))
                 .add("partsOfSpeech", entityBuilder.buildPartOfSpeechSettings(pos))
+                .add("lexicons", entityBuilder.buildLexiconSettings(lex))
                 .build();
     }
 }

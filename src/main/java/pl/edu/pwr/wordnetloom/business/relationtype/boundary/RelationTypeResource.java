@@ -1,8 +1,7 @@
 package pl.edu.pwr.wordnetloom.business.relationtype.boundary;
 
 import pl.edu.pwr.wordnetloom.business.EntityBuilder;
-import pl.edu.pwr.wordnetloom.business.ResourceUriBuilder;
-import pl.edu.pwr.wordnetloom.business.relationtype.entity.RelationType;
+import pl.edu.pwr.wordnetloom.business.LinkBuilder;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -27,7 +26,7 @@ public class RelationTypeResource {
     EntityBuilder entityBuilder;
 
     @Inject
-    ResourceUriBuilder resourceUriBuilder;
+    LinkBuilder linkBuilder;
 
     @Context
     UriInfo uriInfo;
@@ -36,8 +35,8 @@ public class RelationTypeResource {
     public JsonArray getRelationTypes(@HeaderParam("Accept-Language") Locale locale) {
         return service.findAllRelationTypes()
                 .stream()
-                .map(rt -> entityBuilder.buildRelationType(rt, resourceUriBuilder.forRelationType(rt, uriInfo),
-                        resourceUriBuilder.forRelationTests(rt,uriInfo), uriInfo, locale))
+                .map(rt -> entityBuilder.buildRelationType(rt, linkBuilder.forRelationType(rt, uriInfo),
+                        linkBuilder.forRelationTests(rt,uriInfo), uriInfo, locale))
                 .collect(JsonCollectors.toJsonArray());
 
     }
@@ -46,8 +45,8 @@ public class RelationTypeResource {
     @Path("{id:\\d+}")
     public JsonObject getRelationType(@HeaderParam("Accept-Language") Locale locale, @PathParam("id") long id) {
         return service.findRelationTypeById(id)
-                .map(rt -> entityBuilder.buildRelationType(rt, resourceUriBuilder.forRelationType(rt, uriInfo),
-                        resourceUriBuilder.forRelationTests(rt, uriInfo),uriInfo, locale))
+                .map(rt -> entityBuilder.buildRelationType(rt, linkBuilder.forRelationType(rt, uriInfo),
+                        linkBuilder.forRelationTests(rt, uriInfo),uriInfo, locale))
                 .orElse(Json.createObjectBuilder().build());
 
     }
@@ -57,7 +56,7 @@ public class RelationTypeResource {
     public JsonArray getRelationTests(@HeaderParam("Accept-Language") Locale locale, @PathParam("id") long relId) {
         return service.findAllRelationTests(relId)
                 .stream()
-                .map(rt -> entityBuilder.buildRelationTest(rt, resourceUriBuilder.forRelationTest(rt, uriInfo), locale))
+                .map(rt -> entityBuilder.buildRelationTest(rt, linkBuilder.forRelationTest(rt, uriInfo), locale))
                 .collect(JsonCollectors.toJsonArray());
 
     }
@@ -66,7 +65,7 @@ public class RelationTypeResource {
     @Path("{id:\\d+}/tests/{testId:\\d+}")
     public JsonObject getRelationTest(@HeaderParam("Accept-Language") Locale locale, @PathParam("id") long relId, @PathParam("testId") long testId) {
         return service.findRelationTest(relId, testId)
-                .map(rt -> entityBuilder.buildRelationTest(rt, resourceUriBuilder.forRelationTest(rt, uriInfo), locale))
+                .map(rt -> entityBuilder.buildRelationTest(rt, linkBuilder.forRelationTest(rt, uriInfo), locale))
                 .orElse(Json.createObjectBuilder().build());
 
     }

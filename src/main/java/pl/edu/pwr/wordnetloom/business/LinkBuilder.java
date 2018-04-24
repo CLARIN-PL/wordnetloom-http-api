@@ -11,6 +11,7 @@ import pl.edu.pwr.wordnetloom.business.relationtype.boundary.RelationTypeResourc
 import pl.edu.pwr.wordnetloom.business.relationtype.entity.RelationTest;
 import pl.edu.pwr.wordnetloom.business.relationtype.entity.RelationType;
 import pl.edu.pwr.wordnetloom.business.search.boundary.SearchResource;
+import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilter;
 import pl.edu.pwr.wordnetloom.business.sense.boundary.SenseResource;
 import pl.edu.pwr.wordnetloom.business.sense.enity.Sense;
 import pl.edu.pwr.wordnetloom.business.sense.enity.SenseEmotions;
@@ -20,10 +21,11 @@ import pl.edu.pwr.wordnetloom.business.synset.boundary.SynsetResource;
 import pl.edu.pwr.wordnetloom.business.synset.entity.Synset;
 import pl.edu.pwr.wordnetloom.business.synset.entity.SynsetExample;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-public class ResourceUriBuilder {
+public class LinkBuilder {
 
     public URI forDictionary(Dictionary dic, String methodName, UriInfo uriInfo) {
         return createResourceUri(DictionaryResource.class, methodName, dic.getId(), uriInfo);
@@ -69,16 +71,16 @@ public class ResourceUriBuilder {
         return createResourceUri(LexiconResource.class, uriInfo);
     }
 
-    public URI forSynsets(UriInfo uriInfo) {
-        return createResourceUri(SynsetResource.class, uriInfo);
+    public URI forSynsets(UriInfo uriInfo, int page, int perPage) {
+        return createResourceUri(SynsetResource.class, uriInfo, page, perPage);
     }
 
     public URI forSynset(Synset s, UriInfo uriInfo) {
         return createResourceUri(SynsetResource.class, "getSynset", s.getId(), uriInfo);
     }
 
-    public URI forSenses(UriInfo uriInfo) {
-        return createResourceUri(SenseResource.class, uriInfo);
+    public URI forSenses(UriInfo uriInfo, int page, int perPage) {
+        return createResourceUri(SenseResource.class, uriInfo, page, perPage);
     }
 
     public URI forSense(Sense s, UriInfo uriInfo) {
@@ -104,7 +106,10 @@ public class ResourceUriBuilder {
     }
 
     public URI forSearch(UriInfo uriInfo) {
-        return createResourceUri(SearchResource.class, uriInfo);
+        UriBuilder builder = uriInfo.getBaseUriBuilder();
+        builder.path(SearchResource.class);
+
+        return builder.build();
     }
 
     public URI forRelationTypes(UriInfo uriInfo) {
@@ -133,7 +138,15 @@ public class ResourceUriBuilder {
     }
 
     private URI createResourceUri(Class<?> resourceClass, UriInfo uriInfo) {
-        return uriInfo.getBaseUriBuilder().path(resourceClass).build();
+        return uriInfo.getBaseUriBuilder().path(resourceClass)
+                .build();
+    }
+
+    private URI createResourceUri(Class<?> resourceClass, UriInfo uriInfo, int page, int perPage) {
+        return uriInfo.getBaseUriBuilder().path(resourceClass)
+                .queryParam("page", page)
+                .queryParam("per_page",perPage)
+                .build();
     }
 
     public URI forValuations(UriInfo uriInfo) {

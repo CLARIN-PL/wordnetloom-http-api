@@ -3,12 +3,13 @@ package pl.edu.pwr.wordnetloom.business.graph.entity;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import java.util.List;
 
-@JsonbPropertyOrder({"id", "label", "pos", "rel", "top", "right", "left", "bottom"})
+@JsonbPropertyOrder({"id", "lex", "label", "pos", "rel", "top", "right", "left", "bottom"})
 public class NodeExpanded {
 
     private long id;
     private List<String> rel;
     private Long pos;
+    private Long lex;
     private String label;
     private NodeStructure top;
     private NodeStructure bottom;
@@ -20,6 +21,7 @@ public class NodeExpanded {
 
     public NodeExpanded(RootNode head, List<String> rel) {
         this.id = head.getId();
+        this.lex = head.getLex();
         if (rel != null) {
             this.rel = rel;
         }
@@ -113,6 +115,10 @@ public class NodeExpanded {
 
     public Long getPos() {
         return pos;
+    }
+
+    public Long getLex() {
+        return lex;
     }
 }
 

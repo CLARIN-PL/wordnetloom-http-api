@@ -1,7 +1,9 @@
 package pl.edu.pwr.wordnetloom.business.synset.boundary;
 
 import pl.edu.pwr.wordnetloom.business.EntityBuilder;
-import pl.edu.pwr.wordnetloom.business.ResourceUriBuilder;
+import pl.edu.pwr.wordnetloom.business.LinkBuilder;
+import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilter;
+import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilterExtractorFromUrl;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -13,7 +15,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.Locale;
-import java.util.stream.Stream;
 
 @Path("/synsets")
 @Produces(MediaType.APPLICATION_JSON)
@@ -30,7 +31,7 @@ public class SynsetResource {
     EntityBuilder entityBuilder;
 
     @Inject
-    ResourceUriBuilder resourceUriBuilder;
+    LinkBuilder linkBuilder;
 
     @GET
     public void getSynsets(@HeaderParam("Accept-Language") Locale locale) {
@@ -42,7 +43,7 @@ public class SynsetResource {
     public JsonObject getSynset(@HeaderParam("Accept-Language") Locale locale,
                                 @PathParam("id") final Long id) {
         return service.findById(id)
-                .map(s -> entityBuilder.buildSynset(s, service.findSynsetAttributes(id).get(), resourceUriBuilder.forSynset(s, uriInfo), uriInfo, locale))
+                .map(s -> entityBuilder.buildSynset(s, service.findSynsetAttributes(id).get(), linkBuilder.forSynset(s, uriInfo), uriInfo, locale))
                 .orElse(Json.createObjectBuilder().build());
     }
 
@@ -62,7 +63,7 @@ public class SynsetResource {
         return service.findSynsetAttributes(senseId)
                 .map(s -> s.getExamples()
                         .stream()
-                        .map(e -> entityBuilder.buildSynsetExample(e, resourceUriBuilder.forSynsetExample(e, uriInfo)))
+                        .map(e -> entityBuilder.buildSynsetExample(e, linkBuilder.forSynsetExample(e, uriInfo)))
                         .collect(JsonCollectors.toJsonArray()))
                 .orElse(Json.createArrayBuilder().build());
 
@@ -73,7 +74,7 @@ public class SynsetResource {
     public JsonObject getSynsetExample(@HeaderParam("Accept-Language") Locale locale,
                                        @PathParam("synsetId") final Long senseId, @PathParam("exampleId") final Long exampleId) {
         return service.findSynsetExample(exampleId)
-                .map(e -> entityBuilder.buildSynsetExample(e, resourceUriBuilder.forSynsetExample(e, uriInfo)))
+                .map(e -> entityBuilder.buildSynsetExample(e, linkBuilder.forSynsetExample(e, uriInfo)))
                 .orElse(Json.createObjectBuilder().build());
     }
 

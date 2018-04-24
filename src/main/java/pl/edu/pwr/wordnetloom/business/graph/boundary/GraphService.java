@@ -44,7 +44,7 @@ public class GraphService {
         String query = "SELECT * FROM (SELECT rt1.node_position AS position," +
                 "r1.child_synset_id AS c, rt1.short_display_text_id AS f, rt2.short_display_text_id AS t," +
                 "concat(w.word, ' ', s.variant) AS lemma, dom1.name_id AS domain," +
-                "s.part_of_speech_id AS pos FROM synset_relation r1 " +
+                "s.part_of_speech_id AS pos, s.lexicon_id AS lex FROM synset_relation r1 " +
                 "LEFT JOIN relation_type rt1 ON r1.synset_relation_type_id = rt1.id " +
                 "LEFT JOIN relation_type rt2 ON rt1.reverse_relation_type_id = rt2.id " +
                 "LEFT JOIN synset_relation r2 ON r2.parent_synset_id = r1.child_synset_id AND rt1.reverse_relation_type_id = r2.synset_relation_type_id " +
@@ -60,7 +60,7 @@ public class GraphService {
                 "WHEN rt1.node_position  = 'IGNORE' THEN 'IGNORE' END AS position," +
                 "r1.parent_synset_id AS c, rt2.short_display_text_id AS f, rt1.short_display_text_id AS t," +
                 "concat(w.word, ' ', s.variant) AS lemma, dom1.name_id AS domain," +
-                "s.part_of_speech_id AS pos FROM synset_relation r1 " +
+                "s.part_of_speech_id AS pos,s.lexicon_id AS lex FROM synset_relation r1 " +
                 "LEFT JOIN relation_type rt1 ON r1.synset_relation_type_id = rt1.id " +
                 "LEFT JOIN relation_type rt2 ON rt1.reverse_relation_type_id = rt2.id " +
                 "LEFT JOIN synset_relation r2 ON r2.child_synset_id = r1.parent_synset_id AND rt1.reverse_relation_type_id = r2.synset_relation_type_id " +
@@ -81,7 +81,8 @@ public class GraphService {
                 "rt1.short_display_text_id AS f,  rt2.short_display_text_id  AS t, " +
                 "concat(w.word, ' ', s.variant) AS lemma,"+
                 "dom1.name_id as domain,"+
-                "s.part_of_speech_id AS pos "+
+                "s.part_of_speech_id AS pos,"+
+                "s.lexicon_id AS lex "+
                 "FROM sense_relation r1 " +
                 "LEFT JOIN relation_type rt1 ON r1.relation_type_id = rt1.id " +
                 "LEFT JOIN relation_type rt2 ON rt1.reverse_relation_type_id = rt2.id " +
@@ -101,7 +102,8 @@ public class GraphService {
                 "rt2.short_display_text_id AS f, rt1.short_display_text_id AS t,"+
                 "concat(w.word, ' ', s.variant) AS lemma," +
                 "dom1.name_id as domain,"+
-                "s.part_of_speech_id AS pos " +
+                "s.part_of_speech_id AS pos," +
+                "s.lexicon_id AS lex "+
                 "FROM sense_relation r1 " +
                 "LEFT JOIN relation_type rt1 ON r1.relation_type_id = rt1.id " +
                 "LEFT JOIN relation_type rt2 ON rt1.reverse_relation_type_id = rt2.id " +
@@ -113,7 +115,8 @@ public class GraphService {
                 "UNION SELECT 'LEFT' AS np, z.id AS id, 999 AS f,999 AS t," +
                 "concat(w.word, ' ', z.variant) AS lemma," +
                 "dom1.name_id as domain,"+
-                "z.part_of_speech_id AS pos " +
+                "z.part_of_speech_id AS pos," +
+                "z.lexicon_id AS lex "+
                 "FROM sense z " +
                 "LEFT JOIN word w ON w.id = z.word_id " +
                 "LEFT JOIN domain dom1 ON  dom1.id = z.domain_id " +
@@ -134,10 +137,10 @@ public class GraphService {
             result = fetchSenseGraphNode(source.getId());
         }
 
-        NodeExpanded node = new NodeExpanded(new RootNode(source.getId(), source.getPos(), source.getLabel()), source.getRel());
+        NodeExpanded node = new NodeExpanded(new RootNode(source.getId(),source.getLex(), source.getPos(), source.getLabel()), source.getRel());
 
         result.stream()
-                .map(o ->  buildNodeHidden(locale,o[0],o[1],o[2],o[3],o[4],o[5],o[6]))
+                .map(o ->  buildNodeHidden(locale,o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7]))
                 .collect(Collectors.toList())
                 .stream()
                 .collect(Collectors.groupingBy(NodeHidden::getPosition))
@@ -169,6 +172,7 @@ public class GraphService {
         List<Object[]> result = fetchSynsetGraphNode(id);
         RootNode rn = synsetService.findSynsetHead(id)
                 .map(s -> new RootNode(s.getId(),
+                        s.getLexicon().getId(),
                         s.getSenses().stream().findFirst().get().getPartOfSpeech().getId(),
                         entityBuilder.buildLabel(s,locale)) )
                 .orElse(new RootNode());
@@ -179,22 +183,25 @@ public class GraphService {
     public NodeExpanded senseGraph(final Long id, Locale locale) {
         List<Object[]> result = fetchSenseGraphNode(id);
         Sense s = senseService.findHeadSense(id).get();
-        NodeExpanded node = new NodeExpanded(new RootNode(s.getId(), s.getPartOfSpeech().getId(),
+        NodeExpanded node = new NodeExpanded(new RootNode(s.getId(),
+                s.getLexicon().getId(),
+                s.getPartOfSpeech().getId(),
                 s.getWord().getWord()+" "+s.getVariant()+ " (" + loc.find(s.getDomain().getName(), locale) + ")"), null);
         return graph(result, node, locale, false);
     }
 
-    private NodeHidden buildNodeHidden(Locale locale, Object position, Object target, Object firstRelation, Object secondRelation, Object label, Object domain, Object pos) {
+    private NodeHidden buildNodeHidden(Locale locale, Object position, Object target, Object firstRelation, Object secondRelation,
+                                       Object label, Object domain, Object pos,Object lexicon) {
         String r1 = firstRelation != null ? loc.find(((BigInteger) firstRelation).longValue(), locale) : null;
         String r2 = secondRelation != null ? loc.find(((BigInteger) secondRelation).longValue(), locale) : null;
         String dom = domain != null ? "(" + loc.find(((BigInteger) domain).longValue(), locale) + ")" : "";
-        return new NodeHidden(position, target, r1, r2, label, dom, pos);
+        return new NodeHidden(position, target, r1, r2, label, dom, pos, lexicon);
     }
 
     private NodeExpanded graph(final List<Object[]> result, final NodeExpanded node, Locale locale, boolean isSynset) {
 
         result.stream()
-                .map(o ->  buildNodeHidden(locale,o[0],o[1],o[2],o[3],o[4],o[5],o[6]))
+                .map(o ->  buildNodeHidden(locale,o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7]))
                 .collect(Collectors.toList())
                 .stream()
                 .collect(Collectors.groupingBy(NodeHidden::getPosition))

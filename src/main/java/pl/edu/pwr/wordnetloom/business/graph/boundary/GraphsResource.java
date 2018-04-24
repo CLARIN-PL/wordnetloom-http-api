@@ -1,6 +1,6 @@
 package pl.edu.pwr.wordnetloom.business.graph.boundary;
 
-import pl.edu.pwr.wordnetloom.business.ResourceUriBuilder;
+import pl.edu.pwr.wordnetloom.business.LinkBuilder;
 import pl.edu.pwr.wordnetloom.business.graph.entity.NodeExpanded;
 
 import javax.inject.Inject;
@@ -26,7 +26,7 @@ public class GraphsResource {
     GraphService service;
 
     @Inject
-    ResourceUriBuilder resourceUriBuilder;
+    LinkBuilder linkBuilder;
 
     @Context
     UriInfo uriInfo;
@@ -35,8 +35,8 @@ public class GraphsResource {
     public JsonObject getGraphs() {
         final JsonObjectBuilder builder = createObjectBuilder();
         builder.add("_links", Json.createObjectBuilder()
-                .add("senses-graph", resourceUriBuilder.forSenseGraph(22l,uriInfo).toString())
-                .add("synsets-graph", resourceUriBuilder.forSynsetsGraph( 10, uriInfo).toString())
+                .add("senses-graph", linkBuilder.forSenseGraph(22l,uriInfo).toString())
+                .add("synsets-graph", linkBuilder.forSynsetsGraph( 10, uriInfo).toString())
                 .build());
         return builder.build();
     }
