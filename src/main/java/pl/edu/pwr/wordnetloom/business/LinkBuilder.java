@@ -17,6 +17,7 @@ import pl.edu.pwr.wordnetloom.business.sense.enity.Sense;
 import pl.edu.pwr.wordnetloom.business.sense.enity.SenseEmotions;
 import pl.edu.pwr.wordnetloom.business.sense.enity.SenseExample;
 import pl.edu.pwr.wordnetloom.business.settings.boundary.SettingsResource;
+import pl.edu.pwr.wordnetloom.business.statistics.boundary.StatisticsResource;
 import pl.edu.pwr.wordnetloom.business.synset.boundary.SynsetResource;
 import pl.edu.pwr.wordnetloom.business.synset.entity.Synset;
 import pl.edu.pwr.wordnetloom.business.synset.entity.SynsetExample;
@@ -192,5 +193,9 @@ public class LinkBuilder {
 
     public URI forSynsetsGraph(long id, UriInfo uriInfo) {
         return createResourceUri(GraphsResource.class, "getSynsetGraph", id, uriInfo);
+    }
+
+    public URI forStatistics(UriInfo uriInfo) {
+        return createResourceUri(StatisticsResource.class, uriInfo);
     }
 }

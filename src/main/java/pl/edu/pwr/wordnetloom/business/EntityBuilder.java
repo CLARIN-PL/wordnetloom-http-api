@@ -43,6 +43,7 @@ public class EntityBuilder {
                     .add(createLinkObject("senses", this.linkBuilder.forSenses(uriInfo,0,100)))
                     .add(createLinkObject("settings", this.linkBuilder.forSettings(uriInfo)))
                     .add(createLinkObject("synsets", this.linkBuilder.forSynsets(uriInfo,0,100)))
+                    .add(createLinkObject("statistics", this.linkBuilder.forStatistics(uriInfo)))
                 ).build();
     }
 
