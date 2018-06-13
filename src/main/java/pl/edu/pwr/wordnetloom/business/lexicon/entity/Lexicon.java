@@ -30,7 +30,21 @@ public class Lexicon implements Serializable {
     @Column(name = "lexicon_version")
     private String lexiconVersion;
 
-    private String icon;
+    @Column(name = "language_shortcut")
+    private String languageShortcut;
+
+    private String license;
+
+    private String email;
+
+    @Column(name = "reference_url")
+    private String referenceUrl;
+
+    @Lob
+    private String citation;
+
+    @Column(name = "confidence_score")
+    private String confidenceScore;
 
     public Lexicon() {
     }
@@ -81,12 +95,52 @@ public class Lexicon implements Serializable {
         this.lexiconVersion = lexiconVersion;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getLanguageShortcut() {
+        return languageShortcut;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setLanguageShortcut(String languageShortcut) {
+        this.languageShortcut = languageShortcut;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getReferenceUrl() {
+        return referenceUrl;
+    }
+
+    public void setReferenceUrl(String referenceUrl) {
+        this.referenceUrl = referenceUrl;
+    }
+
+    public String getCitation() {
+        return citation;
+    }
+
+    public void setCitation(String citation) {
+        this.citation = citation;
+    }
+
+    public String getConfidenceScore() {
+        return confidenceScore;
+    }
+
+    public void setConfidenceScore(String confidenceScore) {
+        this.confidenceScore = confidenceScore;
     }
 
     @Override

@@ -16,9 +16,24 @@ import java.util.Set;
                 "LEFT JOIN FETCH s.aspect " +
                 "LEFT JOIN FETCH s.register " +
                 "WHERE s.id = :id")
+
+@NamedQuery(name = SenseAttributes.FIND_ALL_BY_LEXICON_WITH_ATTRIBUTES,
+        query = "SELECT DISTINCT sa  FROM SenseAttributes sa " +
+                "LEFT JOIN FETCH sa.examples " +
+                "LEFT JOIN FETCH sa.aspect " +
+                "LEFT JOIN FETCH sa.register " +
+                "LEFT JOIN FETCH Sense s " +
+                "LEFT JOIN FETCH s.word " +
+                "LEFT JOIN FETCH s.domain " +
+                "LEFT JOIN FETCH s.partOfSpeech "+
+                "LEFT JOIN FETCH s.outgoingRelations outr " +
+                "LEFT JOIN FETCH outr.child c " +
+                "LEFT JOIN FETCH c.domain  " +
+                "WHERE s.lexicon.id = :id")
 public class SenseAttributes implements Serializable {
 
     public static final String FIND_BY_ID = "SenseAttributes.findById";
+    public static final String FIND_ALL_BY_LEXICON_WITH_ATTRIBUTES =  "SenseAttributes.findAllByLexiconWIthAttributes";
 
     @Id
     private long id;

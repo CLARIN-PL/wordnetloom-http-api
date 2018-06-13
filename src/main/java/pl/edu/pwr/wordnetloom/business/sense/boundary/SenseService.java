@@ -137,6 +137,12 @@ public class SenseService {
                 .getResultList();
     }
 
+    public List<SenseAttributes> findAllSensesByLexicon(Long id) {
+        return em.createNamedQuery(SenseAttributes.FIND_ALL_BY_LEXICON_WITH_ATTRIBUTES, SenseAttributes.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     public Optional<SenseEmotions> findSenseEmotion(Long id){
         try {
             return Optional.of(

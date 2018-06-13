@@ -9,16 +9,23 @@ import java.util.Set;
 
 @Entity
 @Table(name = "synset_attributes")
-@NamedQueries({
-        @NamedQuery(name = SynsetAttributes.FIND_BY_ID_WITH_EXAMPLES,
-                query = "SELECT DISTINCT s " +
-                        "FROM SynsetAttributes s " +
-                        "LEFT JOIN FETCH s.examples " +
-                        "WHERE s.id = :id"),
-})
+@NamedQuery(name = SynsetAttributes.FIND_BY_ID_WITH_EXAMPLES,
+        query = "SELECT DISTINCT s " +
+                "FROM SynsetAttributes s " +
+                "LEFT JOIN FETCH s.examples " +
+                "WHERE s.id = :id")
+
+@NamedQuery(name = SynsetAttributes.FIND_BY_ID_WITH_EXAMPLES_AND_SYNSET_INCOMING_RELATIONS,
+        query = "SELECT DISTINCT s " +
+                "FROM SynsetAttributes s " +
+                "LEFT JOIN FETCH s.examples " +
+                "LEFT JOIN s.synset sy " +
+                "LEFT JOIN sy.incomingRelations " +
+                "WHERE s.id = :id")
 public class SynsetAttributes implements Serializable {
 
     public static final String FIND_BY_ID_WITH_EXAMPLES = "SynsetAttributes.findWithExamplesById";
+    public static final String FIND_BY_ID_WITH_EXAMPLES_AND_SYNSET_INCOMING_RELATIONS = "SynsetAttributes.findWithExamplesByIdAndSynsetIncomingRelations";
 
     @Id
     protected long id;

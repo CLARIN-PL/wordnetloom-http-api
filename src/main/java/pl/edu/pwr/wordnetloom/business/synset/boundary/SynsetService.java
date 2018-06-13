@@ -39,6 +39,17 @@ public class SynsetService {
         }
     }
 
+    public Optional<SynsetAttributes> findSynsetAttributesWithSynsetAndIncomingRelations(Long id) {
+        try {
+            return Optional.of(
+                    em.createNamedQuery(SynsetAttributes.FIND_BY_ID_WITH_EXAMPLES_AND_SYNSET_INCOMING_RELATIONS, SynsetAttributes.class)
+                            .setParameter("id", id)
+                            .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<SynsetExample> findSynsetExample(Long id) {
         try {
             return Optional.of(

@@ -1,5 +1,6 @@
 package pl.edu.pwr.wordnetloom.business;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.Dictionary;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.Domain;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.PartOfSpeech;
@@ -117,13 +118,31 @@ public class EntityBuilder {
         if (lex.getIdentifier() != null) {
             builder.add("identifier", lex.getIdentifier());
         }
+        if(lex.getReferenceUrl() != null){
+            builder.add("reference_url", lex.getReferenceUrl());
+        }
         if (lex.getLanguageName() != null) {
             builder.add("language", lex.getLanguageName());
         }
-
+        if (lex.getLanguageName() != null) {
+            builder.add("language_shortcut", lex.getLanguageShortcut());
+        }
         if (lex.getLexiconVersion() != null) {
             builder.add("version", lex.getLexiconVersion());
         }
+        if(lex.getLicense() != null){
+            builder.add("license", lex.getLicense());
+        }
+        if(lex.getEmail() != null){
+            builder.add("email", lex.getEmail());
+        }
+        if(lex.getCitation() != null){
+            builder.add("citation", lex.getCitation());
+        }
+        if(lex.getConfidenceScore() != null){
+            builder.add("confidence_score", lex.getConfidenceScore());
+        }
+
         final JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
 
@@ -623,9 +642,8 @@ public class EntityBuilder {
     public JsonObject buildLexiconSettings(List<Lexicon> lex) {
         JsonObjectBuilder b = Json.createObjectBuilder();
         lex.forEach(l -> {
-            String[] s = l.getIcon().split("\\.");
             b.add(String.valueOf(l.getId()), Json.createObjectBuilder()
-                .add("icon", s[0]));
+                .add("icon", l.getLanguageShortcut()));
         });
         return b.build();
     }
