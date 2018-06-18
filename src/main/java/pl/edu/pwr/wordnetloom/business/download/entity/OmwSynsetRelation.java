@@ -1,13 +1,14 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
+
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "SenseRelation")
+@XmlRootElement(name = "SynsetRelation")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SenseRelation {
+public class OmwSynsetRelation {
 
     @XmlAttribute(required = true)
     private String target;
@@ -56,9 +57,9 @@ public class SenseRelation {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SenseRelation)) return false;
+        if (!(o instanceof OmwSynsetRelation)) return false;
 
-        SenseRelation that = (SenseRelation) o;
+        OmwSynsetRelation that = (OmwSynsetRelation) o;
 
         if (target != null ? !target.equals(that.target) : that.target != null) return false;
         if (relType != null ? !relType.equals(that.relType) : that.relType != null) return false;

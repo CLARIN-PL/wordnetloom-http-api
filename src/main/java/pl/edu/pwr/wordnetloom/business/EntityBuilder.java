@@ -1,6 +1,5 @@
 package pl.edu.pwr.wordnetloom.business;
 
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.Dictionary;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.Domain;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.PartOfSpeech;
@@ -35,16 +34,16 @@ public class EntityBuilder {
 
     public JsonObject buildRootDocument(UriInfo uriInfo) {
         return createObjectBuilder()
-                .add("links",createArrayBuilder()
-                    .add(createLinkObject("dictionaries", this.linkBuilder.forDictionaries(uriInfo)))
-                    .add(createLinkObject("graphs", this.linkBuilder.forGraphs(uriInfo)))
-                    .add(createLinkObject("lexicons", this.linkBuilder.forLexicons(uriInfo)))
-                    .add(createLinkObject("relation_types", this.linkBuilder.forRelationTypes(uriInfo)))
-                    .add(createLinkObject("search", this.linkBuilder.forSearch(uriInfo)))
-                    .add(createLinkObject("senses", this.linkBuilder.forSenses(uriInfo,0,100)))
-                    .add(createLinkObject("settings", this.linkBuilder.forSettings(uriInfo)))
-                    .add(createLinkObject("synsets", this.linkBuilder.forSynsets(uriInfo,0,100)))
-                    .add(createLinkObject("statistics", this.linkBuilder.forStatistics(uriInfo)))
+                .add("links", createArrayBuilder()
+                        .add(createLinkObject("dictionaries", linkBuilder.forDictionaries(uriInfo)))
+                        .add(createLinkObject("graphs", linkBuilder.forGraphs(uriInfo)))
+                        .add(createLinkObject("lexicons", linkBuilder.forLexicons(uriInfo)))
+                        .add(createLinkObject("relation_types", linkBuilder.forRelationTypes(uriInfo)))
+                        .add(createLinkObject("search", linkBuilder.forSearch(uriInfo)))
+                        .add(createLinkObject("senses", linkBuilder.forSenses(uriInfo, 0, 100)))
+                        .add(createLinkObject("settings", linkBuilder.forSettings(uriInfo)))
+                        .add(createLinkObject("synsets", linkBuilder.forSynsets(uriInfo, 0, 100)))
+                        .add(createLinkObject("statistics", linkBuilder.forStatistics(uriInfo)))
                 ).build();
     }
 
@@ -52,9 +51,9 @@ public class EntityBuilder {
         return createObjectBuilder().add("rel", createArrayBuilder().add(relation)).add("href", uri.toString()).build();
     }
 
-    public JsonObject buildDictionary(final Dictionary dic, URI self, final Locale locale) {
+    public JsonObject buildDictionary(Dictionary dic, URI self, Locale locale) {
 
-        final JsonObjectBuilder builder = createObjectBuilder();
+        JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("id", dic.getId());
         if (dic.getName() != null) {
@@ -64,7 +63,7 @@ public class EntityBuilder {
             builder.add("description", loc.find(dic.getDescription(), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
 
         builder.add("_links", linkBuilder);
@@ -72,9 +71,9 @@ public class EntityBuilder {
         return builder.build();
     }
 
-    public JsonObject buildDomain(final Domain d, URI self, final Locale locale) {
+    public JsonObject buildDomain(Domain d, URI self, Locale locale) {
 
-        final JsonObjectBuilder builder = createObjectBuilder();
+        JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("id", d.getId());
         if (d.getName() != null) {
@@ -84,31 +83,31 @@ public class EntityBuilder {
             builder.add("description", loc.find(d.getDescription(), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
 
         builder.add("_links", linkBuilder);
         return builder.build();
     }
 
-    public JsonObject buildPartOfSpeech(final PartOfSpeech p, URI self, final Locale locale) {
+    public JsonObject buildPartOfSpeech(PartOfSpeech p, URI self, Locale locale) {
 
-        final JsonObjectBuilder builder = createObjectBuilder();
+        JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("id", p.getId());
         if (p.getName() != null) {
             builder.add("name", loc.find(p.getName(), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
 
         builder.add("_links", linkBuilder);
         return builder.build();
     }
 
-    public JsonObject buildLexicon(final Lexicon lex, URI self) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+    public JsonObject buildLexicon(Lexicon lex, URI self) {
+        JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("id", lex.getId());
 
@@ -118,7 +117,7 @@ public class EntityBuilder {
         if (lex.getIdentifier() != null) {
             builder.add("identifier", lex.getIdentifier());
         }
-        if(lex.getReferenceUrl() != null){
+        if (lex.getReferenceUrl() != null) {
             builder.add("reference_url", lex.getReferenceUrl());
         }
         if (lex.getLanguageName() != null) {
@@ -130,28 +129,28 @@ public class EntityBuilder {
         if (lex.getLexiconVersion() != null) {
             builder.add("version", lex.getLexiconVersion());
         }
-        if(lex.getLicense() != null){
+        if (lex.getLicense() != null) {
             builder.add("license", lex.getLicense());
         }
-        if(lex.getEmail() != null){
+        if (lex.getEmail() != null) {
             builder.add("email", lex.getEmail());
         }
-        if(lex.getCitation() != null){
+        if (lex.getCitation() != null) {
             builder.add("citation", lex.getCitation());
         }
-        if(lex.getConfidenceScore() != null){
+        if (lex.getConfidenceScore() != null) {
             builder.add("confidence_score", lex.getConfidenceScore());
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
 
         builder.add("_links", linkBuilder);
         return builder.build();
     }
 
-    public JsonObject buildLexiconShort(final Lexicon lex, UriInfo uriInfo) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+    public JsonObject buildLexiconShort(Lexicon lex, UriInfo uriInfo) {
+        JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("id", lex.getId());
 
@@ -159,15 +158,15 @@ public class EntityBuilder {
             builder.add("name", lex.getName());
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", this.linkBuilder.forLexicon(lex, uriInfo).toString());
 
         builder.add("_links", linkBuilder);
         return builder.build();
     }
 
-    public JsonObject buildPartOfSpeechShort(final PartOfSpeech pos, UriInfo uriInfo, Locale locale) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+    public JsonObject buildPartOfSpeechShort(PartOfSpeech pos, UriInfo uriInfo, Locale locale) {
+        JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("id", pos.getId());
 
@@ -175,22 +174,22 @@ public class EntityBuilder {
             builder.add("name", loc.find(pos.getName(), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", this.linkBuilder.forPartOfSpeech(pos, uriInfo).toString());
 
         builder.add("_links", linkBuilder);
         return builder.build();
     }
 
-    public JsonObject buildRelationTypeShort(final RelationType rt, URI self, final Locale locale) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+    public JsonObject buildRelationTypeShort(RelationType rt, URI self, Locale locale) {
+        JsonObjectBuilder builder = createObjectBuilder();
         builder.add("id", rt.getId());
 
         if (rt.getName() != null) {
             builder.add("name", loc.find(rt.getName(), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
 
         builder.add("_links", linkBuilder);
@@ -198,15 +197,15 @@ public class EntityBuilder {
 
     }
 
-    public JsonObject buildDictionaryShort(final Dictionary d, String method, UriInfo uriInfo, final Locale locale) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+    public JsonObject buildDictionaryShort(Dictionary d, String method, UriInfo uriInfo, Locale locale) {
+        JsonObjectBuilder builder = createObjectBuilder();
         builder.add("id", d.getId());
 
         if (d.getName() != null) {
             builder.add("name", loc.find(d.getName(), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", this.linkBuilder.forDictionary(d, method, uriInfo).toString());
 
         builder.add("_links", linkBuilder);
@@ -214,15 +213,15 @@ public class EntityBuilder {
 
     }
 
-    public JsonObject buildDomainShort(final Domain d, UriInfo uriInfo, final Locale locale) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+    public JsonObject buildDomainShort(Domain d, UriInfo uriInfo, Locale locale) {
+        JsonObjectBuilder builder = createObjectBuilder();
         builder.add("id", d.getId());
 
         if (d.getName() != null) {
             builder.add("name", loc.find(d.getName(), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", this.linkBuilder.forDomain(d, uriInfo).toString());
 
         builder.add("_links", linkBuilder);
@@ -230,8 +229,8 @@ public class EntityBuilder {
 
     }
 
-    public JsonObject buildRelationType(final RelationType rt, URI self, URI tests, UriInfo uriInfo, final Locale locale) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+    public JsonObject buildRelationType(RelationType rt, URI self, URI tests, UriInfo uriInfo, Locale locale) {
+        JsonObjectBuilder builder = createObjectBuilder();
         builder.add("id", rt.getId());
 
         if (rt.getLexicons().size() > 0) {
@@ -282,7 +281,7 @@ public class EntityBuilder {
                     linkBuilder.forRelationType(rt.getReverse(), uriInfo), locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
         linkBuilder.add("tests", tests.toString());
 
@@ -290,7 +289,7 @@ public class EntityBuilder {
         return builder.build();
     }
 
-    public JsonObject buildSynset(final Synset synset, final SynsetAttributes attributes, URI self, UriInfo uriInfo, final Locale locale) {
+    public JsonObject buildSynset(Synset synset, SynsetAttributes attributes, URI self, UriInfo uriInfo, Locale locale) {
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add("id", synset.getId());
@@ -309,7 +308,7 @@ public class EntityBuilder {
             builder.add("definition", attributes.getDefinition());
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
         linkBuilder.add("examples", this.linkBuilder.forSynsetExamples(synset, uriInfo).toString());
         linkBuilder.add("relations", this.linkBuilder.forSynsetRelations(synset, uriInfo).toString());
@@ -321,14 +320,14 @@ public class EntityBuilder {
     }
 
     public JsonObject buildRelationTest(RelationTest rt, URI self, Locale locale) {
-        final JsonObjectBuilder builder = createObjectBuilder();
+        JsonObjectBuilder builder = createObjectBuilder();
         builder.add("id", rt.getId());
 
         if (rt.getTest() != null) {
             builder.add("test", rt.getTest());
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
 
         builder.add("_links", linkBuilder);
@@ -353,15 +352,15 @@ public class EntityBuilder {
         return b.build();
     }
 
-    public JsonObject buildPaginatedSense(final List<Sense> senses, long count,int page, int perPage, UriInfo uriInfo, Locale locale) {
+    public JsonObject buildPaginatedSense(List<Sense> senses, long count, int page, int perPage, UriInfo uriInfo, Locale locale) {
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", this.linkBuilder.forSenses(uriInfo, page, perPage).toString());
         linkBuilder.add("prev", "");
 
         linkBuilder.add("next", this.linkBuilder.forSenses(uriInfo,
                 findNextPage(count, page, perPage)
-                .orElse(0), perPage).toString());
+                        .orElse(0), perPage).toString());
 
         return Json.createObjectBuilder()
                 .add("page", page)
@@ -374,15 +373,15 @@ public class EntityBuilder {
                 .build();
     }
 
-    private Optional<Integer> findNextPage(long count, final Integer page, int perPage){
-        if(count > perPage){
+    private Optional<Integer> findNextPage(long count, Integer page, int perPage) {
+        if (count > perPage) {
             return ((page + 1) * perPage) < count ? Optional.of(page + 1) : Optional.empty();
         }
         return Optional.empty();
     }
 
-    public JsonObject buildPaginatedSenseSearch(final List<Sense> senses, long count, SearchFilter filter, UriInfo uriInfo, Locale locale) {
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+    public JsonObject buildPaginatedSenseSearch(List<Sense> senses, long count, SearchFilter filter, UriInfo uriInfo, Locale locale) {
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", uriInfo.getRequestUri().toString());
         linkBuilder.add("prev", "");
         linkBuilder.add("next", "");
@@ -404,7 +403,7 @@ public class EntityBuilder {
                 .build();
     }
 
-    public JsonObject buildSynsetRelations(Synset synset,Map<String, List<Object[]>> relations, Locale locale) {
+    public JsonObject buildSynsetRelations(Synset synset, Map<String, List<Object[]>> relations, Locale locale) {
         return Json.createObjectBuilder()
                 .add("root", buildLabel(synset, locale))
                 .add("incoming", buildSynsetRelations(relations.get("incoming"), locale))
@@ -424,7 +423,7 @@ public class EntityBuilder {
         return Json.createObjectBuilder()
                 .add("relation_id", (BigInteger) row[2])
                 .add("target", (BigInteger) row[3])
-                .add("label", buildLabel((String) row[4], ((BigInteger)row[5]).longValue(), locale))
+                .add("label", buildLabel((String) row[4], ((BigInteger) row[5]).longValue(), locale))
                 .build();
     }
 
@@ -471,7 +470,7 @@ public class EntityBuilder {
             builder.add("link", attributes.getLink());
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
         linkBuilder.add("examples", this.linkBuilder.forSenseExamples(sense, uriInfo).toString());
         linkBuilder.add("relations", this.linkBuilder.forSenseRelations(sense, uriInfo).toString());
@@ -500,7 +499,7 @@ public class EntityBuilder {
             builder.add("label", buildLabel(sense, true, locale));
         }
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
         builder.add("_links", linkBuilder);
 
@@ -534,12 +533,12 @@ public class EntityBuilder {
         return builder.build();
     }
 
-    private JsonArray buildSynsetRelations(List<Object[]> list,  Locale locale) {
+    private JsonArray buildSynsetRelations(List<Object[]> list, Locale locale) {
 
         JsonArrayBuilder builder = createArrayBuilder();
 
         Map<String, List<Object[]>> map = list.stream()
-                .collect(Collectors.groupingBy(o -> loc.find(((BigInteger) o[1]).longValue(),locale)));
+                .collect(Collectors.groupingBy(o -> loc.find(((BigInteger) o[1]).longValue(), locale)));
 
         map.forEach((k, v) -> {
 
@@ -563,18 +562,18 @@ public class EntityBuilder {
         builder.add("id", se.getId());
         builder.add("emotional_characteristic", se.isHasEmotionalCharacteristic());
         builder.add("super_annotation", se.isSuperAnnotation());
-        if(se.getEmotions() != null)
+        if (se.getEmotions() != null)
             builder.add("emotions", se.getEmotions());
-        if(se.getValuations() != null)
+        if (se.getValuations() != null)
             builder.add("valuations", se.getValuations());
-        if(se.getMarkedness() != null)
+        if (se.getMarkedness() != null)
             builder.add("markedness", se.getMarkedness());
-        if(se.getExample1() != null)
+        if (se.getExample1() != null)
             builder.add("example1", se.getExample1());
-        if(se.getExample2() != null)
+        if (se.getExample2() != null)
             builder.add("example2", se.getExample2());
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
         builder.add("_links", linkBuilder);
 
@@ -585,19 +584,19 @@ public class EntityBuilder {
         JsonObjectBuilder builder = createObjectBuilder();
 
         builder.add("id", se.getId());
-        if(se.getExample() != null)
+        if (se.getExample() != null)
             builder.add("text", se.getExample());
-        if(se.getType() != null)
+        if (se.getType() != null)
             builder.add("type", se.getType());
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
         builder.add("_links", linkBuilder);
 
         return builder.build();
     }
 
-    public String buildLabel(final Sense sense, Boolean withLexicon, final Locale locale) {
+    public String buildLabel(Sense sense, Boolean withLexicon, Locale locale) {
         StringBuilder sb = new StringBuilder();
         sb.append(sense.getWord())
                 .append(" ")
@@ -611,15 +610,15 @@ public class EntityBuilder {
         return sb.toString();
     }
 
-    public String buildLabel(final Synset synset, final Locale locale) {
+    public String buildLabel(Synset synset, Locale locale) {
         return synset.getSenses().stream().findFirst()
-                .map(s -> (synset.getAbstract() ? "S ": "") + s.getWord() + " " + s.getVariant() + " (" + loc.find(s.getDomain().getName(), locale) + ")")
+                .map(s -> (synset.getAbstract() ? "S " : "") + s.getWord() + " " + s.getVariant() + " (" + loc.find(s.getDomain().getName(), locale) + ")")
                 .orElse("");
 
     }
 
-    public String buildLabel(final String lemma, final Long domainNameId, final Locale locale) {
-        return  lemma + " (" + loc.find(domainNameId, locale) + ")";
+    public String buildLabel(String lemma, Long domainNameId, Locale locale) {
+        return lemma + " (" + loc.find(domainNameId, locale) + ")";
 
     }
 
@@ -627,12 +626,12 @@ public class EntityBuilder {
         JsonObjectBuilder builder = createObjectBuilder();
         builder.add("id", e.getId());
 
-        if(e.getExample() != null)
+        if (e.getExample() != null)
             builder.add("text", e.getExample());
-        if(e.getType() != null)
+        if (e.getType() != null)
             builder.add("type", e.getType());
 
-        final JsonObjectBuilder linkBuilder = createObjectBuilder();
+        JsonObjectBuilder linkBuilder = createObjectBuilder();
         linkBuilder.add("self", self.toString());
         builder.add("_links", linkBuilder);
 
@@ -643,7 +642,7 @@ public class EntityBuilder {
         JsonObjectBuilder b = Json.createObjectBuilder();
         lex.forEach(l -> {
             b.add(String.valueOf(l.getId()), Json.createObjectBuilder()
-                .add("icon", l.getLanguageShortcut()));
+                    .add("icon", l.getLanguageShortcut()));
         });
         return b.build();
     }

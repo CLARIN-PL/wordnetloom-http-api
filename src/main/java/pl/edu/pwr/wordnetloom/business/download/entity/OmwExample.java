@@ -1,4 +1,4 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,15 +7,15 @@ import javax.xml.bind.annotation.XmlValue;
 
 @XmlRootElement(name = "Example")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Example {
+public class OmwExample {
 
     @XmlValue
     private String value;
 
-    public Example() {
+    public OmwExample() {
     }
 
-    public Example(String value) {
+    public OmwExample(String value) {
         this.value = value;
     }
 
@@ -30,9 +30,9 @@ public class Example {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Example)) return false;
+        if (!(o instanceof OmwExample)) return false;
 
-        Example example = (Example) o;
+        OmwExample example = (OmwExample) o;
 
         return value != null ? value.equals(example.value) : example.value == null;
     }

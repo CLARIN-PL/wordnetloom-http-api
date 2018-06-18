@@ -1,4 +1,4 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.Set;
 
 @XmlRootElement(name = "Lexicon")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Lexicon {
+public class OmwLexicon {
 
     @XmlAttribute(required = true)
     private String id;
@@ -37,15 +37,15 @@ public class Lexicon {
     private String confidenceScore;
 
     @XmlElement(name = "LexicalEntry")
-    private List<LexicalEntry> lexicalEntries = new ArrayList<>();
+    private List<OmwLexicalEntry> lexicalEntries = new ArrayList<>();
 
     @XmlElement(name = "Synset")
-    private List<Synset> synsets = new ArrayList<>();
+    private List<OmwSynset> omwSynsets = new ArrayList<>();
 
-    public Lexicon() {
+    public OmwLexicon() {
     }
 
-    private Lexicon(LexiconBuilder builder) {
+    private OmwLexicon(LexiconBuilder builder) {
         id = builder.id;
         label = builder.label;
         language = builder.language;
@@ -54,7 +54,7 @@ public class Lexicon {
         version = builder.version;
         url = builder.url;
         lexicalEntries = builder.lexicalEntries;
-        synsets = builder.synsets;
+        omwSynsets = builder.omwSynsets;
         citation = builder.citation;
         confidenceScore = builder.confidenceScore;
     }
@@ -132,20 +132,20 @@ public class Lexicon {
         this.confidenceScore = confidenceScore;
     }
 
-    public List<LexicalEntry> getLexicalEntries() {
+    public List<OmwLexicalEntry> getLexicalEntries() {
         return lexicalEntries;
     }
 
-    public void setLexicalEntries(List<LexicalEntry> lexicalEntries) {
+    public void setLexicalEntries(List<OmwLexicalEntry> lexicalEntries) {
         this.lexicalEntries = lexicalEntries;
     }
 
-    public List<Synset> getSynsets() {
-        return synsets;
+    public List<OmwSynset> getOmwSynsets() {
+        return omwSynsets;
     }
 
-    public void setSynsets(List<Synset> synsets) {
-        this.synsets = synsets;
+    public void setOmwSynsets(List<OmwSynset> omwSynsets) {
+        this.omwSynsets = omwSynsets;
     }
 
     public static class LexiconBuilder {
@@ -159,8 +159,8 @@ public class Lexicon {
         private String url;
         private String confidenceScore;
         private String citation;
-        private List<Synset> synsets = new ArrayList<>();
-        private List<LexicalEntry> lexicalEntries;
+        private List<OmwSynset> omwSynsets = new ArrayList<>();
+        private List<OmwLexicalEntry> lexicalEntries;
 
         public LexiconBuilder(String id, String label) {
             this.id = id;
@@ -192,12 +192,12 @@ public class Lexicon {
             return this;
         }
 
-        public LexiconBuilder synsets(Set<Synset> synsets) {
-            this.synsets.addAll(synsets);
+        public LexiconBuilder synsets(Set<OmwSynset> omwSynsets) {
+            this.omwSynsets.addAll(omwSynsets);
             return this;
         }
 
-        public LexiconBuilder lexicalEntries(List<LexicalEntry> lexicalEntries) {
+        public LexiconBuilder lexicalEntries(List<OmwLexicalEntry> lexicalEntries) {
             this.lexicalEntries = lexicalEntries;
             return this;
         }
@@ -212,8 +212,8 @@ public class Lexicon {
             return this;
         }
 
-        public Lexicon build() {
-            return new Lexicon(this);
+        public OmwLexicon build() {
+            return new OmwLexicon(this);
         }
     }
 

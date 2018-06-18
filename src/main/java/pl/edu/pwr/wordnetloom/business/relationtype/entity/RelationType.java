@@ -1,8 +1,8 @@
 package pl.edu.pwr.wordnetloom.business.relationtype.entity;
 
+import pl.edu.pwr.wordnetloom.business.dictionary.entity.PartOfSpeech;
 import pl.edu.pwr.wordnetloom.business.graph.entity.NodeDirection;
 import pl.edu.pwr.wordnetloom.business.lexicon.entity.Lexicon;
-import pl.edu.pwr.wordnetloom.business.dictionary.entity.PartOfSpeech;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,10 +21,13 @@ import java.util.Set;
 @NamedQuery(name = RelationType.FIND_BY_ID,
         query = "SELECT rt  FROM RelationType rt LEFT JOIN FETCH rt.parent par " +
                 "LEFT JOIN FETCH rt.reverse rev LEFT JOIN FETCH rt.lexicons LEFT JOIN FETCH rt.partsOfSpeech WHERE rt.id =:id")
+@NamedQuery(name = RelationType.FIND_BY_RELATION_ARGUMENT,
+        query = "SELECT rt  FROM RelationType rt WHERE rt.relationArgument = :arg")
 public class RelationType implements Serializable {
 
     public static final String FIND_ALL = "RelationType.findAll";
     public static final String FIND_BY_ID = "RelationType.findById";
+    public static final String FIND_BY_RELATION_ARGUMENT = "RelationType.findByRelationArgument";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,6 +99,10 @@ public class RelationType implements Serializable {
 
     @Column
     private String color = "#ffffff";
+
+    @Column(name = "global_wordnet_relation_type")
+    @Enumerated(EnumType.STRING)
+    private GlobalWordnetRelationType globalWordnetRelationType;
 
     public RelationType() {
     }
@@ -246,6 +253,14 @@ public class RelationType implements Serializable {
 
     public void setMultilingual(Boolean multilingual) {
         this.multilingual = multilingual;
+    }
+
+    public GlobalWordnetRelationType getGlobalWordnetRelationType() {
+        return globalWordnetRelationType;
+    }
+
+    public void setGlobalWordnetRelationType(GlobalWordnetRelationType globalWordnetRelationType) {
+        this.globalWordnetRelationType = globalWordnetRelationType;
     }
 
     @Override

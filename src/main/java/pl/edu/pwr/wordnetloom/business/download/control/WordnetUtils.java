@@ -1,4 +1,4 @@
-package pl.edu.pwr.wordnetloom.business.omw.control;
+package pl.edu.pwr.wordnetloom.business.download.control;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

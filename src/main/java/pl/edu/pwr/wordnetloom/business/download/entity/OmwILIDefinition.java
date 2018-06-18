@@ -1,4 +1,4 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -7,15 +7,15 @@ import javax.xml.bind.annotation.XmlValue;
 
 @XmlRootElement(name = "ILIDefinition")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ILIDefinition {
+public class OmwILIDefinition {
 
     @XmlValue
     private String value;
 
-    public ILIDefinition() {
+    public OmwILIDefinition() {
     }
 
-    public ILIDefinition(String value) {
+    public OmwILIDefinition(String value) {
         this.value = value;
     }
 
@@ -30,9 +30,9 @@ public class ILIDefinition {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ILIDefinition)) return false;
+        if (!(o instanceof OmwILIDefinition)) return false;
 
-        ILIDefinition that = (ILIDefinition) o;
+        OmwILIDefinition that = (OmwILIDefinition) o;
 
         return value != null ? value.equals(that.value) : that.value == null;
     }

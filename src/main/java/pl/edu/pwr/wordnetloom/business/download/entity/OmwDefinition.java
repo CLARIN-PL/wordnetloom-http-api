@@ -1,10 +1,10 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
 
 import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "Definition")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Definition {
+public class OmwDefinition {
 
     @XmlAttribute
     private String language;
@@ -42,9 +42,9 @@ public class Definition {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Definition)) return false;
+        if (!(o instanceof OmwDefinition)) return false;
 
-        Definition that = (Definition) o;
+        OmwDefinition that = (OmwDefinition) o;
 
         if (language != null ? !language.equals(that.language) : that.language != null) return false;
         if (sourceSense != null ? !sourceSense.equals(that.sourceSense) : that.sourceSense != null) return false;

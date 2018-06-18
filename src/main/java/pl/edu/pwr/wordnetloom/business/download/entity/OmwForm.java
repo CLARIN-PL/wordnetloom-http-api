@@ -1,10 +1,10 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
 
 import javax.xml.bind.annotation.*;
 
-@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Form {
+@XmlRootElement(name = "Form")
+public class OmwForm {
 
     @XmlAttribute(required = true)
     private String writtenForm;
@@ -12,14 +12,14 @@ public class Form {
     private String script;
 
     @XmlElement(name = "Tag")
-    private Tag tag;
+    private OmwTag omwTag;
 
-    public Form() {
+    public OmwForm() {
     }
 
-    public Form(String writtenForm, Tag tag) {
+    public OmwForm(String writtenForm, OmwTag omwTag) {
         this.writtenForm = writtenForm;
-        this.tag = tag;
+        this.omwTag = omwTag;
     }
 
     public String getWrittenForm() {
@@ -38,31 +38,31 @@ public class Form {
         this.script = script;
     }
 
-    public Tag getTag() {
-        return tag;
+    public OmwTag getOmwTag() {
+        return omwTag;
     }
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
+    public void setOmwTag(OmwTag omwTag) {
+        this.omwTag = omwTag;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Form)) return false;
+        if (!(o instanceof OmwForm)) return false;
 
-        Form form = (Form) o;
+        OmwForm omwForm = (OmwForm) o;
 
-        if (writtenForm != null ? !writtenForm.equals(form.writtenForm) : form.writtenForm != null) return false;
-        if (script != null ? !script.equals(form.script) : form.script != null) return false;
-        return tag != null ? tag.equals(form.tag) : form.tag == null;
+        if (writtenForm != null ? !writtenForm.equals(omwForm.writtenForm) : omwForm.writtenForm != null) return false;
+        if (script != null ? !script.equals(omwForm.script) : omwForm.script != null) return false;
+        return omwTag != null ? omwTag.equals(omwForm.omwTag) : omwForm.omwTag == null;
     }
 
     @Override
     public int hashCode() {
         int result = writtenForm != null ? writtenForm.hashCode() : 0;
         result = 31 * result + (script != null ? script.hashCode() : 0);
-        result = 31 * result + (tag != null ? tag.hashCode() : 0);
+        result = 31 * result + (omwTag != null ? omwTag.hashCode() : 0);
         return result;
     }
 }

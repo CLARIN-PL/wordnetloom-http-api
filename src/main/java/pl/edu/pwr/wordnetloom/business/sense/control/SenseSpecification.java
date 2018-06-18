@@ -1,20 +1,18 @@
 package pl.edu.pwr.wordnetloom.business.sense.control;
 
 import pl.edu.pwr.wordnetloom.business.search.entity.SearchFilter;
-import pl.edu.pwr.wordnetloom.business.sense.enity.Sense;
-import pl.edu.pwr.wordnetloom.business.sense.enity.SenseAttributes;
-import pl.edu.pwr.wordnetloom.business.sense.enity.SenseExample;
-import pl.edu.pwr.wordnetloom.business.sense.enity.SenseRelation;
-import pl.edu.pwr.wordnetloom.business.sense.enity.Word;
+import pl.edu.pwr.wordnetloom.business.sense.enity.*;
+import pl.edu.pwr.wordnetloom.business.synset.entity.Synset;
+import pl.edu.pwr.wordnetloom.business.synset.entity.SynsetRelation;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SenseSpecification {
 
-    public static Specification<Sense> byFilter(final SearchFilter filter) {
+    public static Specification<Sense> byFilter(SearchFilter filter) {
 
         return (root, query, cb) -> {
 
@@ -37,7 +35,11 @@ public class SenseSpecification {
             }
 
             if (filter.getRelationTypeId() != null) {
-                criteria.addAll(bySenseRelationType(filter.getRelationTypeId(), root, cb));
+                if (filter.getSynsetMode()) {
+                    criteria.addAll(bySynsetRelationType(filter.getRelationTypeId(), root, cb));
+                } else {
+                    criteria.addAll(bySenseRelationType(filter.getRelationTypeId(), root, cb));
+                }
             }
 
             if (filter.getSynsetId() != null) {
@@ -45,13 +47,13 @@ public class SenseSpecification {
             }
 
             Predicate attributes = filterSenseAttributes(filter, root, cb);
-            if(attributes != null) criteria.add(attributes);
+            if (attributes != null) criteria.add(attributes);
 
             return cb.and(criteria.toArray(new Predicate[criteria.size()]));
         };
     }
 
-    public static Predicate filterSenseAttributes(final SearchFilter filter, Root<Sense> root, CriteriaBuilder cb) {
+    public static Predicate filterSenseAttributes(SearchFilter filter, Root<Sense> root, CriteriaBuilder cb) {
 
         if (filter.getRegisterId() != null || filter.getComment() != null || filter.getExample() != null) {
 
@@ -79,17 +81,22 @@ public class SenseSpecification {
             }
 
             subquery.where(cb.and(predicates.toArray(new Predicate[0])));
-            return  cb.in(root.get("id")).value(subquery);
+            return cb.in(root.get("id")).value(subquery);
         }
         return null;
     }
 
     public static List<Predicate> bySenseRelationType(Long rel, Root<Sense> root, CriteriaBuilder cb) {
-            Join<Sense, SenseRelation> incoming = root.join("incomingRelations", JoinType.LEFT);
-            Join<Sense, SenseRelation> outgoing = root.join("outgoingRelations", JoinType.LEFT);
-            Predicate incomingRelationsPredicate = cb.equal(incoming.get("relationType"), rel);
-            Predicate outgoingRelationsPredicate = cb.equal(outgoing.get("relationType"), rel);
-            return Arrays.asList(incomingRelationsPredicate, outgoingRelationsPredicate);
+        Join<Sense, SenseRelation> outgoing = root.join("outgoingRelations", JoinType.LEFT);
+        Predicate outgoingRelationsPredicate = cb.equal(outgoing.get("relationType").get("id"), rel);
+        return Collections.singletonList(outgoingRelationsPredicate);
+    }
+
+    public static List<Predicate> bySynsetRelationType(Long rel, Root<Sense> root, CriteriaBuilder cb) {
+        Join<Sense, Synset> synset = root.join("synset", JoinType.LEFT);
+        Join<Synset, SynsetRelation> outgoing = synset.join("outgoingRelations", JoinType.LEFT);
+        Predicate outgoingRelationsPredicate = cb.equal(outgoing.get("relationType").get("id"), rel);
+        return Collections.singletonList(outgoingRelationsPredicate);
     }
 
     public static Specification<Sense> byPartOfSpeech(Long posId) {
@@ -109,7 +116,7 @@ public class SenseSpecification {
     }
 
     public static Specification<Sense> byLemmaLike(String lemma) {
-        return (root, query, cb) -> cb.like(root.get("word").get("word"), lemma+"%");
+        return (root, query, cb) -> cb.like(root.get("word").get("word"), lemma + "%");
     }
 
     public static Specification<Sense> byLemmaLikeContains(String lemma) {

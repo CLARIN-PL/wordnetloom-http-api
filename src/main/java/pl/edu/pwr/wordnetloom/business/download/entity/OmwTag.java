@@ -1,10 +1,10 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
 
 import javax.xml.bind.annotation.*;
 
-@XmlRootElement
+@XmlRootElement(name = "Tag")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Tag {
+public class OmwTag {
 
     @XmlAttribute(required = true)
     private String category;
@@ -12,10 +12,10 @@ public class Tag {
     @XmlValue
     private String value;
 
-    public Tag() {
+    public OmwTag() {
     }
 
-    public Tag(String category, String value) {
+    public OmwTag(String category, String value) {
         this.category = category;
         this.value = value;
     }

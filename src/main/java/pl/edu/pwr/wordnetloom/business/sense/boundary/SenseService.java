@@ -45,6 +45,7 @@ public class SenseService {
         orders.add(cb.asc(sense.get("lexicon")));
 
         qc.select(sense);
+        qc.distinct(true);
         qc.orderBy(orders);
         qc.where(predicates.toArray(new Predicate[predicates.size()]));
 

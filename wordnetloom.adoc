@@ -87,7 +87,7 @@
         },
 
         {
-            other sense
+            other omwSense
         },
     ]
 }
@@ -216,7 +216,7 @@
         }
     },
     {
-        other sense relations
+        other omwSense relations
     }
     "_links": {
         "self": "http://wordnetloom/resources/senses/1/relations",
@@ -280,8 +280,8 @@
 ----
 {
     "_links": {
-        "senses":  "http://wordnetloom/resources/graphs/sense/<id>"
-        "synsets":  "http://wordnetloom/resources/graphs/synset/<id>"
+        "senses":  "http://wordnetloom/resources/graphs/omwSense/<id>"
+        "synsets":  "http://wordnetloom/resources/graphs/omwSynset/<id>"
     }
 }
 ----
@@ -292,7 +292,7 @@
 [
 {
     "id": 10
-    "type": "synset relation"
+    "type": "omwSynset relation"
     "parent": {
         "id": 1
         "name": "xxx"
@@ -349,7 +349,7 @@
 ----
 {
     "id": 10
-    "type": "synset relation"
+    "type": "omwSynset relation"
     "parent": {
         "id": 1
         "name": "xxx"
@@ -396,7 +396,7 @@
 }
 ----
 
-`GET /synsets`:
+`GET /omwSynsets`:
 
 ----
 [

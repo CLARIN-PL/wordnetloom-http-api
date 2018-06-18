@@ -1,13 +1,13 @@
-package pl.edu.pwr.wordnetloom.business.omw.entity;
+package pl.edu.pwr.wordnetloom.business.download.entity;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
+@XmlRootElement(name = "Lemma")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Lemma {
+public class OmwLemma {
 
     @XmlAttribute(required = true)
     private String writtenForm;
@@ -15,10 +15,10 @@ public class Lemma {
     @XmlAttribute(required = true)
     private String partOfSpeech;
 
-    public Lemma() {
+    public OmwLemma() {
     }
 
-    public Lemma(String writtenForm, String partOfSpeech) {
+    public OmwLemma(String writtenForm, String partOfSpeech) {
         this.writtenForm = writtenForm;
         this.partOfSpeech = partOfSpeech;
     }
@@ -42,12 +42,12 @@ public class Lemma {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Lemma)) return false;
+        if (!(o instanceof OmwLemma)) return false;
 
-        Lemma lemma = (Lemma) o;
+        OmwLemma omwLemma = (OmwLemma) o;
 
-        if (writtenForm != null ? !writtenForm.equals(lemma.writtenForm) : lemma.writtenForm != null) return false;
-        return partOfSpeech != null ? partOfSpeech.equals(lemma.partOfSpeech) : lemma.partOfSpeech == null;
+        if (writtenForm != null ? !writtenForm.equals(omwLemma.writtenForm) : omwLemma.writtenForm != null) return false;
+        return partOfSpeech != null ? partOfSpeech.equals(omwLemma.partOfSpeech) : omwLemma.partOfSpeech == null;
     }
 
     @Override
