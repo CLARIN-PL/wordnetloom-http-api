@@ -267,6 +267,8 @@ public class EntityBuilder {
             builder.add("auto_revers", rt.getAutoReverse());
         }
 
+        builder.add("argument", rt.getRelationArgument().name());
+
         if (rt.getMultilingual() != null) {
             builder.add("multilingual", rt.getMultilingual());
         }
