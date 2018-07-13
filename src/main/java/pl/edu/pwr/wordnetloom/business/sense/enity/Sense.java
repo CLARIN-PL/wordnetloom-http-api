@@ -1,9 +1,9 @@
 package pl.edu.pwr.wordnetloom.business.sense.enity;
 
-import pl.edu.pwr.wordnetloom.business.dictionary.entity.Status;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.Domain;
-import pl.edu.pwr.wordnetloom.business.lexicon.entity.Lexicon;
 import pl.edu.pwr.wordnetloom.business.dictionary.entity.PartOfSpeech;
+import pl.edu.pwr.wordnetloom.business.dictionary.entity.Status;
+import pl.edu.pwr.wordnetloom.business.lexicon.entity.Lexicon;
 import pl.edu.pwr.wordnetloom.business.synset.entity.Synset;
 
 import javax.persistence.*;
@@ -25,11 +25,11 @@ import java.util.Set;
                 "LEFT JOIN FETCH c.domain  WHERE s.id = :id")
 
 @NamedQuery(name = Sense.FIND_BY_ID_WITH_ATTRIBUTES,
-                query = "SELECT DISTINCT s FROM Sense s LEFT JOIN FETCH s.word " +
-                        "LEFT JOIN FETCH s.domain " +
-                        "LEFT JOIN FETCH s.partOfSpeech " +
-                        "LEFT JOIN FETCH s.lexicon " +
-                        "LEFT JOIN FETCH s.synset WHERE s.id = :id")
+        query = "SELECT DISTINCT s FROM Sense s LEFT JOIN FETCH s.word " +
+                "LEFT JOIN FETCH s.domain " +
+                "LEFT JOIN FETCH s.partOfSpeech " +
+                "LEFT JOIN FETCH s.lexicon " +
+                "LEFT JOIN FETCH s.synset WHERE s.id = :id")
 
 @NamedQuery(name = Sense.FIND_ALL_WITH_ATTRIBUTES,
         query = "SELECT DISTINCT s FROM Sense s LEFT JOIN FETCH s.word LEFT JOIN FETCH s.domain " +
@@ -39,19 +39,32 @@ import java.util.Set;
         query = "SELECT s FROM Sense s LEFT JOIN s.word w LEFT JOIN s.domain d  WHERE s.id = :id ")
 
 @NamedQuery(name = Sense.FIND_LEMMA_COUNT_BY_LEXICON_AND_POS,
-        query="SELECT COUNT(DISTINCT w.word) FROM Sense s " +
-                "LEFT JOIN s.word w "+
+        query = "SELECT COUNT(DISTINCT w.word) FROM Sense s " +
+                "LEFT JOIN s.word w " +
                 "WHERE s.lexicon.id = :lexiconId AND s.partOfSpeech.id = :posId")
 
 @NamedQuery(name = Sense.FIND_SENSE_COUNT_BY_LEXICON_AND_POS,
-        query="SELECT COUNT(s.id)FROM Sense s " +
-                "LEFT JOIN s.word w "+
+        query = "SELECT COUNT(s.id)FROM Sense s " +
+                "LEFT JOIN s.word w " +
                 "WHERE s.lexicon.id = :lexiconId AND s.partOfSpeech.id = :posId")
 
 @NamedQuery(name = Sense.FIND_SYNSET_COUNT_BY_LEXICON_AND_POS,
-        query="SELECT COUNT(DISTINCT syn.id)FROM Sense s " +
-                "LEFT JOIN s.synset syn "+
+        query = "SELECT COUNT(DISTINCT syn.id)FROM Sense s " +
+                "LEFT JOIN s.synset syn " +
                 "WHERE s.lexicon.id = :lexiconId AND s.partOfSpeech.id = :posId")
+
+@NamedQuery(name = Sense.FIND_ALL_BY_LEXICON_WITH_ATTRIBUTES,
+        query = "SELECT DISTINCT s  FROM Sense s " +
+                "LEFT JOIN FETCH s.attributes sa "+
+                "LEFT JOIN FETCH sa.examples " +
+                "LEFT JOIN FETCH sa.aspect " +
+                "LEFT JOIN FETCH sa.register " +
+                "LEFT JOIN FETCH s.word " +
+                "LEFT JOIN FETCH s.domain " +
+                "LEFT JOIN FETCH s.partOfSpeech " +
+                "LEFT JOIN FETCH s.synset " +
+                "LEFT JOIN FETCH s.lexicon l " +
+                "WHERE l.id = :id")
 public class Sense implements Serializable {
 
     public static final String FIND_BY_ID_WITH_ATTRIBUTES = "Sense.findByIdWithAttributes";
@@ -61,6 +74,7 @@ public class Sense implements Serializable {
     public static final String FIND_LEMMA_COUNT_BY_LEXICON_AND_POS = "Sense.findLemmaCountByLexiconIdAndPos";
     public static final String FIND_SENSE_COUNT_BY_LEXICON_AND_POS = "Sense.findSenseCountByLexiconIdAndPos";
     public static final String FIND_SYNSET_COUNT_BY_LEXICON_AND_POS = "Sense.findSynsetCountByLexiconIdAndPos";
+    public static final String FIND_ALL_BY_LEXICON_WITH_ATTRIBUTES = "Sense.findAllByLexiconWithAttributes";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -105,6 +119,9 @@ public class Sense implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
+
+    @OneToOne(mappedBy = "sense", fetch = FetchType.LAZY)
+    private SenseAttributes attributes;
 
     public long getId() {
         return id;
@@ -184,6 +201,14 @@ public class Sense implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public SenseAttributes getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(SenseAttributes attributes) {
+        this.attributes = attributes;
     }
 
     @Override

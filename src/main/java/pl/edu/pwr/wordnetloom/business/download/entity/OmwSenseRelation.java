@@ -1,9 +1,6 @@
 package pl.edu.pwr.wordnetloom.business.download.entity;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "SenseRelation")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -15,11 +12,27 @@ public class OmwSenseRelation {
     @XmlAttribute(required = true)
     private String relType;
 
-    @XmlAttribute(name = "dc:type", required = false)
+    @XmlAttribute(name = "dc:type")
     private String type;
 
-    @XmlAttribute(name = "dc:description", required = false)
+    @XmlAttribute(name = "dc:description")
     private String desc;
+
+    @XmlTransient
+    private String parent;
+
+    public OmwSenseRelation() {
+    }
+
+    public OmwSenseRelation(String parent, String target, String relType) {
+        this.target = target;
+        this.relType = relType;
+        this.parent = parent;
+    }
+
+    public String getParent() {
+        return parent;
+    }
 
     public String getTarget() {
         return target;

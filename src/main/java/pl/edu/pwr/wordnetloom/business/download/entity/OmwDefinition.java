@@ -15,6 +15,13 @@ public class OmwDefinition {
     @XmlValue
     private String value;
 
+    public OmwDefinition() {
+    }
+
+    public OmwDefinition(String value) {
+        this.value = value;
+    }
+
     public String getLanguage() {
         return language;
     }

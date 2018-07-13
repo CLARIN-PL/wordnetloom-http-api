@@ -18,6 +18,9 @@ public class OmwSynset {
     @XmlAttribute
     private String note;
 
+    @XmlAttribute(required = true)
+    private String partOfSpeech;
+
     @XmlElement(name = "Definition")
     private Set<OmwDefinition> definitions = new HashSet<>();
 
@@ -86,6 +89,14 @@ public class OmwSynset {
         this.example = example;
     }
 
+    public String getPartOfSpeech() {
+        return partOfSpeech;
+    }
+
+    public void setPartOfSpeech(String partOfSpeech) {
+        this.partOfSpeech = partOfSpeech;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -120,10 +131,22 @@ public class OmwSynset {
     public OmwSynset() {
     }
 
+    public OmwSynset(OmwSynset s, Set<OmwSynsetRelation> omwSynsetRelations) {
+        this.id = s.id;
+        this.ili = s.ili;
+        this.note = s.note;
+        this.partOfSpeech = s.partOfSpeech;
+        this.definitions = s.definitions;
+        this.omwIliDefinition = s.omwIliDefinition;
+        this.omwSynsetRelations = omwSynsetRelations;
+        this.example = s.example;
+    }
+
     private OmwSynset(SynsetBuilder builder) {
         id = builder.id;
         ili = builder.ili;
         note = builder.note;
+        partOfSpeech = builder.partOfSpeech;
         definitions = builder.definitions;
         omwIliDefinition = builder.omwIliDefinition;
         omwSynsetRelations = builder.omwSynsetRelations;
@@ -135,6 +158,7 @@ public class OmwSynset {
         private final String id;
         private final String ili;
         private String note;
+        private String partOfSpeech;
         private Set<OmwDefinition> definitions = new HashSet<>();
         private OmwILIDefinition omwIliDefinition;
         private OmwExample example;
@@ -143,6 +167,11 @@ public class OmwSynset {
         public SynsetBuilder(String id, String ili) {
             this.id = id;
             this.ili = ili;
+        }
+
+        public SynsetBuilder partOfSpeech(String pos) {
+            this.partOfSpeech = pos;
+            return this;
         }
 
         public SynsetBuilder note(String note) {

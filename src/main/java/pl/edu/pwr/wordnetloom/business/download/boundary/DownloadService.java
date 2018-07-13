@@ -18,7 +18,7 @@ public class DownloadService {
 
     public File buildEnWordnetFile() {
         String filename = "/tmp/EnWordnet.xml";
-        gwMarshaller.buildResource(enWordnetBuilder.buildLexicalResource(), filename);
+        gwMarshaller.buildResource(enWordnetBuilder.buildLexicalResource(3L), filename);
         return new File(filename);
     }
 }

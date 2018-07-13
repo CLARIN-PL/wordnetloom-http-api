@@ -30,10 +30,28 @@ import java.util.Set;
                 "WHERE se.synsetPosition = :synsetPosition " +
                 "and s.id = :synsetId"
 )
+
+@NamedQuery(name = Synset.FIND_BY_ID_WITH_EXAMPLES_AND_SYNSET_INCOMING_RELATIONS,
+        query = "SELECT DISTINCT s " +
+                "FROM Synset s " +
+                "LEFT JOIN FETCH s.attributes a " +
+                "LEFT JOIN FETCH a.examples " +
+                "LEFT JOIN s.incomingRelations " +
+                "WHERE s.id = :id")
+
+@NamedQuery(name = Synset.FIND_BY_LEXICON_WITH_EXAMPLES,
+        query = "SELECT DISTINCT s FROM Synset s " +
+                "LEFT JOIN FETCH s.attributes a " +
+                "LEFT JOIN FETCH s.lexicon l " +
+                "LEFT JOIN FETCH a.examples " +
+                "WHERE l.id = :lexId")
 public class Synset implements Serializable {
 
     public static final String FIND_SYNSET_HEAD = "Synset.finaSynsetHead";
     public static final String FIND_BY_ID_WITH_LEXICON_AND_SENSES_WITH_DOMAIN = "Synset.findByIdWithLexiconAndSensesWithDomain";
+    public static final String FIND_BY_ID_WITH_EXAMPLES_AND_SYNSET_INCOMING_RELATIONS = "Synset.findWithExamplesByIdAndSynsetIncomingRelations";
+    public static final String FIND_BY_LEXICON_WITH_EXAMPLES = "Synset.findByLexiconWithExamples";
+    public static final String FIND_SYNSET_PART_OF_SPEECH = "Synset.findSynsetPartOfSpeech";
 
     public static final int SYNSET_HEAD_POSITION = 0;
 
@@ -66,6 +84,9 @@ public class Synset implements Serializable {
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private Set<SynsetRelation> outgoingRelations = new HashSet<>();
+
+    @OneToOne (mappedBy="synset", fetch = FetchType.LAZY)
+    private SynsetAttributes attributes;
 
     public long getId() {
         return id;
@@ -129,5 +150,13 @@ public class Synset implements Serializable {
 
     public void setAbstract(Boolean anAbstract) {
         isAbstract = anAbstract;
+    }
+
+    public SynsetAttributes getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(SynsetAttributes attributes) {
+        this.attributes = attributes;
     }
 }

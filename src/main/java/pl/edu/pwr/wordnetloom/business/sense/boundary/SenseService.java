@@ -10,12 +10,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Stateless
 public class SenseService {
@@ -114,7 +111,7 @@ public class SenseService {
         try {
             return Optional.of(
                     em.createNamedQuery(SenseAttributes.FIND_BY_ID, SenseAttributes.class)
-                            .setParameter("id",id)
+                            .setParameter("id", id)
                             .getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
@@ -125,7 +122,7 @@ public class SenseService {
         try {
             return Optional.of(
                     em.createNamedQuery(SenseExample.FIND_BY_ID, SenseExample.class)
-                            .setParameter("id",id)
+                            .setParameter("id", id)
                             .getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
@@ -138,31 +135,38 @@ public class SenseService {
                 .getResultList();
     }
 
-    public List<SenseAttributes> findAllSensesByLexicon(Long id) {
-        return em.createNamedQuery(SenseAttributes.FIND_ALL_BY_LEXICON_WITH_ATTRIBUTES, SenseAttributes.class)
+    public List<Sense> findAllSensesByLexicon(Long id) {
+        return em.createNamedQuery(Sense.FIND_ALL_BY_LEXICON_WITH_ATTRIBUTES, Sense.class)
                 .setParameter("id", id)
                 .getResultList();
     }
 
-    public Optional<SenseEmotions> findSenseEmotion(Long id){
+    public Optional<SenseEmotions> findSenseEmotion(Long id) {
         try {
             return Optional.of(
                     em.createNamedQuery(SenseEmotions.FIND_BY_ID, SenseEmotions.class)
-                            .setParameter("id",id)
+                            .setParameter("id", id)
                             .getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
         }
     }
 
-    public Optional<SenseRelation> findSenseRelation(Long id){
+    public Optional<SenseRelation> findSenseRelation(Long id) {
         try {
             return Optional.of(
                     em.createNamedQuery(SenseRelation.FIND_BY_ID, SenseRelation.class)
-                            .setParameter("id",id)
+                            .setParameter("id", id)
                             .getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    public List<SenseRelation> findSenseRelationsByParentLexicon(Long id) {
+        return em.createNamedQuery(SenseRelation.FIND_BY_PARENT_LEXICON_ID, SenseRelation.class)
+                .setParameter("lexId", id)
+                .getResultList();
+
     }
 }

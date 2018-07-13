@@ -8,7 +8,18 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "synset_relation")
+@NamedQuery(name = SynsetRelation.FIND_BY_PARENT_LEXICON_ID,
+        query = "SELECT r FROM SynsetRelation r " +
+                "JOIN FETCH r.parent p " +
+                "JOIN FETCH r.child c " +
+                "JOIN FETCH c.attributes " +
+                "JOIN FETCH p.lexicon pl " +
+                "JOIN FETCH c.lexicon  cl " +
+                "JOIN FETCH r.relationType " +
+                "WHERE pl.id = :lexId")
 public class SynsetRelation implements Serializable {
+
+    public static final String FIND_BY_PARENT_LEXICON_ID = "Synset.findByParentLexiconId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

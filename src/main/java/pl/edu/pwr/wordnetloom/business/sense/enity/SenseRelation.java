@@ -8,9 +8,21 @@ import java.io.Serializable;
 @Entity
 @Table(name = "sense_relation")
 @NamedQuery(name = SenseRelation.FIND_BY_ID, query = "SELECT r FROM SenseRelation r WHERE r.id = :relId")
+@NamedQuery(name = SenseRelation.FIND_BY_PARENT_LEXICON_ID,
+        query = "SELECT r FROM SenseRelation r " +
+                "JOIN FETCH r.parent p " +
+                "JOIN FETCH r.child c " +
+                "JOIN FETCH c.partOfSpeech " +
+                "JOIN FETCH p.lexicon pl " +
+                "JOIN FETCH p.synset ps " +
+                "JOIN FETCH c.lexicon cl " +
+                "JOIN FETCH c.synset cs " +
+                "JOIN FETCH r.relationType  " +
+                "WHERE pl.id = :lexId")
 public class SenseRelation implements Serializable {
 
     public static final String FIND_BY_ID = "SenseRelation.findById";
+    public static final String FIND_BY_PARENT_LEXICON_ID = "SenseRelation.findByParentLexiconId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
