@@ -18,8 +18,10 @@ import java.util.Set;
 @NamedQuery(name = RelationType.FIND_ALL,
         query = "SELECT rt  FROM RelationType rt LEFT JOIN FETCH rt.parent par " +
                 "LEFT JOIN FETCH rt.reverse rev LEFT JOIN FETCH rt.lexicons LEFT JOIN FETCH rt.partsOfSpeech")
+
 @NamedQuery(name = RelationType.FIND_BY_ID,
         query = "SELECT rt  FROM RelationType rt LEFT JOIN FETCH rt.parent par " +
+
                 "LEFT JOIN FETCH rt.reverse rev LEFT JOIN FETCH rt.lexicons LEFT JOIN FETCH rt.partsOfSpeech WHERE rt.id =:id")
 @NamedQuery(name = RelationType.FIND_BY_RELATION_ARGUMENT,
         query = "SELECT rt  FROM RelationType rt WHERE rt.relationArgument = :arg")

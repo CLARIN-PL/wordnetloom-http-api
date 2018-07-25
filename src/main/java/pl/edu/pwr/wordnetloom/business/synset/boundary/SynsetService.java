@@ -95,7 +95,6 @@ public class SynsetService {
         }
     }
 
-
     public Optional<Synset> findSynsetHead(Long id) {
         try {
             return Optional.of(
@@ -106,6 +105,12 @@ public class SynsetService {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    public List<SynsetRelation> findParentSynsetByRelationType(Long relType){
+        return em.createNamedQuery(SynsetRelation.FIND_PARENT_SYNSET_BY_RELATION_TYPE, SynsetRelation.class)
+                .setParameter("relTypeId", relType)
+                .getResultList();
     }
 
     public Optional<Map<String, List<Object[]>>> findSynsetRelations(Long id) {

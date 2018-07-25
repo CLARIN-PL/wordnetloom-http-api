@@ -163,9 +163,47 @@ public class EnWordnetBuilder {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+       /* Map<Long, List<SynsetRelation>> noLinkToPrinceton = allRelations.entrySet()
+                .stream()
+                .filter(e -> e.getValue().stream()
+                            .filter(s -> s.getTarget().startsWith("pwn-syn")).count() == 0)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toMap(e -> e.getKey(), new ArrayList<SynsetRelation>()));*/
+
+//        findHyponymLinksToPrinceton(noLinkToPrinceton);
+
         return Stream.of(synsets, princetonSynsets, synsetsFromSense).flatMap(m -> m.entrySet().stream())
                 .map(s -> new OmwSynset(s.getValue(), allRelations.get(s.getKey())))
                 .collect(Collectors.toSet());
+    }
+    private Long convertStringIdToLong(String id){
+        return new Long(id.replace("enwn-syn-",""));
+    }
+    private void findHyponymLinksToPrinceton(Map<Long, List<SynsetRelation>> noLinkToPrinceton){
+            List<SynsetRelation> hipero = synsetService.findParentSynsetByRelationType(171L);
+            Map<Long, List<SynsetRelation>> result = findPrincetonHyperonym(noLinkToPrinceton, hipero);
+            System.out.println(result);
+    }
+
+    private Map<Long, List<SynsetRelation>> findPrincetonHyperonym(final Map<Long, List<SynsetRelation>> rels, final List<SynsetRelation> hyper){
+
+            rels.keySet().forEach(k -> {
+                Set<SynsetRelation> r =  hyper.stream()
+                                        .filter(sr -> sr.getChild().getId() == k)
+                                        .collect(Collectors.toSet());
+                rels.get(k).addAll(r);
+            });
+
+            Map<Long, List<SynsetRelation>> iter1 = rels.entrySet()
+                    .stream()
+                    .filter(e -> e.getValue().stream().filter(sr -> sr.getParent().getLexicon().getId() == 2l).count() == 0)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+/*
+            Map<Long, List<SynsetRelation>> iter1a = iter1.entrySet()
+                        .stream()
+                        .collect(Collectors.toMap((e) -> e.getKey(), new ArrayList<>()));*/
+
+            return iter1;
     }
 
     private OmwSynset buildPrincetonSynset(Synset s, String lexiconPrefix, Map<Long, Long> synsetPartOfSpeeches) {

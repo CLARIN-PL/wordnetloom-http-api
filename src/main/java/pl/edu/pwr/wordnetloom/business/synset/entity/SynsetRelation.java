@@ -17,9 +17,18 @@ import java.io.Serializable;
                 "JOIN FETCH c.lexicon  cl " +
                 "JOIN FETCH r.relationType " +
                 "WHERE pl.id = :lexId")
+
+@NamedQuery(name = SynsetRelation.FIND_PARENT_SYNSET_BY_RELATION_TYPE,
+        query = "SELECT r FROM SynsetRelation r " +
+                "JOIN FETCH r.parent p " +
+                "JOIN FETCH r.child c " +
+                "JOIN FETCH p.lexicon pl " +
+                "JOIN FETCH c.lexicon cl " +
+                "WHERE r.relationType.id = :relTypeId")
 public class SynsetRelation implements Serializable {
 
-    public static final String FIND_BY_PARENT_LEXICON_ID = "Synset.findByParentLexiconId";
+    public static final String FIND_BY_PARENT_LEXICON_ID = "SynsetRelation.findByParentLexiconId";
+    public static final String FIND_PARENT_SYNSET_BY_RELATION_TYPE= "SynsetRelation.findParentSynsetByRelationType";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
